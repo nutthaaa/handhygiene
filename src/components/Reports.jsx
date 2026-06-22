@@ -31,15 +31,48 @@ function DetailModal({ detail, onClose }) {
   ];
 
   return (
-    <div className="detail-backdrop" role="presentation" onClick={onClose}>
-      <section className="detail-modal" role="dialog" aria-modal="true" onClick={(event) => event.stopPropagation()}>
-        <div className="detail-modal-head">
-          <div><small>{isCsi ? "CSI IMPORT" : "OBSERVATION FORM"}</small><h2>{isCsi ? detail.item.fileName : detail.item.department}</h2></div>
-          <button onClick={onClose} aria-label="ปิด">×</button>
+    <div className="fixed inset-0 z-50 grid place-items-center bg-slate-950/50 p-5 backdrop-blur-[3px]" role="presentation" onClick={onClose}>
+      <section className="max-h-[calc(100vh-40px)] w-full max-w-[560px] overflow-y-auto rounded-[14px] bg-white p-[18px] shadow-2xl" role="dialog" aria-modal="true" onClick={(event) => event.stopPropagation()}>
+        <div className="flex justify-between gap-[15px] border-b border-slate-200 pb-3">
+          <div>
+            <small className="text-[8px] font-extrabold tracking-[1px] text-sky-600">{isCsi ? "CSI IMPORT" : "OBSERVATION FORM"}</small>
+            <h2 className="mt-[3px] text-base font-bold">{isCsi ? detail.item.fileName : detail.item.department}</h2>
+          </div>
+          <button className="grid size-[30px] place-items-center rounded-full bg-slate-100 text-xl text-slate-500" onClick={onClose} aria-label="ปิด">×</button>
         </div>
-        <dl>{rows.map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value || "ไม่ระบุ"}</dd></div>)}</dl>
+        <dl className="mt-3 grid">
+          {rows.map(([label, value]) => (
+            <div className="grid grid-cols-[145px_1fr] gap-3 border-b border-slate-100 px-[3px] py-[9px] max-[720px]:grid-cols-1 max-[720px]:gap-[3px]" key={label}>
+              <dt className="text-[9px] text-slate-500">{label}</dt>
+              <dd className="m-0 text-[10px] leading-6 text-slate-700">{value || "ไม่ระบุ"}</dd>
+            </div>
+          ))}
+        </dl>
       </section>
     </div>
+  );
+}
+
+const actionButton = "whitespace-nowrap rounded-[7px] border border-slate-200 bg-white px-2 py-1.5 text-[8px] text-sky-900";
+const deleteButton = "whitespace-nowrap rounded-[7px] border border-red-200 bg-red-50 px-2 py-1.5 text-[8px] text-red-700";
+
+function ReportRecord({ badge, badgeClass, title, subtitle, stat, statLabel, onDetail, onDelete }) {
+  return (
+    <article className="grid grid-cols-[40px_minmax(0,1fr)_90px_auto] items-center gap-2.5 rounded-[9px] border border-slate-200 bg-slate-50/60 p-2.5 max-[1100px]:grid-cols-[38px_minmax(0,1fr)_auto]">
+      <span className={`grid size-[38px] place-items-center rounded-lg text-[7px] font-extrabold text-white ${badgeClass}`}>{badge}</span>
+      <div className="min-w-0">
+        <b className="block overflow-hidden text-ellipsis whitespace-nowrap text-[9px]">{title}</b>
+        <small className="mt-0.5 block text-[7px] text-slate-500">{subtitle}</small>
+      </div>
+      <div className="min-w-0 text-center max-[1100px]:hidden">
+        <b className="block text-[11px] text-sky-900">{stat}</b>
+        <small className="block text-[7px] text-slate-500">{statLabel}</small>
+      </div>
+      <div className="flex gap-[5px] max-[1100px]:col-start-2 max-[1100px]:col-end-[-1] max-[1100px]:justify-end">
+        <button className={actionButton} onClick={onDetail}>ดูรายละเอียด</button>
+        <button className={deleteButton} onClick={onDelete}>ลบ</button>
+      </div>
+    </article>
   );
 }
 
@@ -69,45 +102,69 @@ export default function Reports({
     }
   }
 
+  const blockClass = "mb-[13px] rounded-xl border border-slate-200 bg-white p-3.5 shadow-[0_8px_25px_rgba(26,68,98,.08)]";
+  const emptyClass = "rounded-lg bg-slate-50 p-3 text-center text-[9px] text-slate-500";
+  const clearClass = "border-0 bg-transparent text-[8px] text-red-600 underline";
+
   return (
-    <section className="reports-page">
-      <header>
-        <div><p className="eyebrow">DATA MANAGEMENT</p><h1>รายงานและจัดการข้อมูล</h1><p className="header-subtitle">ตรวจสอบรายละเอียดและลบข้อมูลที่บันทึกผิดได้ทีละรายการ</p></div>
+    <section className="mx-auto max-w-[1200px]">
+      <header className="mb-4">
+        <div>
+          <p className="m-0 text-[9px] font-extrabold tracking-[1.3px] text-sky-600">DATA MANAGEMENT</p>
+          <h1 className="mt-0.5 text-[23px] font-bold tracking-[-.45px] max-[720px]:text-lg">รายงานและจัดการข้อมูล</h1>
+          <p className="mt-px text-[9px] text-slate-500">ตรวจสอบรายละเอียดและลบข้อมูลที่บันทึกผิดได้ทีละรายการ</p>
+        </div>
       </header>
 
-      <section className="report-block">
-        <div className="report-block-head">
-          <div><span className="file-badge">CSI</span><div><h2>ไฟล์ Excel จาก CSI</h2><p>{csiCount.toLocaleString("th-TH")} observations · {csiImports.length} ไฟล์</p></div></div>
-          {csiImports.length > 0 && <button className="danger-link" onClick={() => window.confirm("ลบข้อมูล CSI ทั้งหมดใช่หรือไม่?") && onClearCsi()}>ล้างทั้งหมด</button>}
+      <section className={blockClass}>
+        <div className="mb-[11px] flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5">
+            <span className="grid size-[34px] place-items-center rounded-lg bg-emerald-600 text-[8px] font-extrabold text-white">CSI</span>
+            <div><h2 className="text-[11px] font-bold">ไฟล์ Excel จาก CSI</h2><p className="mt-0.5 text-[8px] text-slate-500">{csiCount.toLocaleString("th-TH")} observations · {csiImports.length} ไฟล์</p></div>
+          </div>
+          {csiImports.length > 0 && <button className={clearClass} onClick={() => window.confirm("ลบข้อมูล CSI ทั้งหมดใช่หรือไม่?") && onClearCsi()}>ล้างทั้งหมด</button>}
         </div>
-        {csiImports.length === 0 ? <div className="imported-empty">ยังไม่มีไฟล์ Excel จาก CSI</div> : (
-          <div className="report-record-list">
+        {csiImports.length === 0 ? <div className={emptyClass}>ยังไม่มีไฟล์ Excel จาก CSI</div> : (
+          <div className="grid gap-[7px]">
             {csiImports.map((item) => (
-              <article className="report-record" key={item.month}>
-                <span className="record-icon excel">XLS</span>
-                <div className="record-main"><b>{item.fileName}</b><small>เดือนข้อมูล {monthLabel(item.month)} · นำเข้า {formatDate(item.importedAt, true)}</small></div>
-                <div className="record-stat"><b>{item.count.toLocaleString("th-TH")}</b><small>observations</small></div>
-                <div className="record-actions"><button onClick={() => setDetail({ type: "csi", item })}>ดูรายละเอียด</button><button className="delete" onClick={() => removeImport(item)}>ลบ</button></div>
-              </article>
+              <ReportRecord
+                key={item.month}
+                badge="XLS"
+                badgeClass="bg-emerald-600"
+                title={item.fileName}
+                subtitle={`เดือนข้อมูล ${monthLabel(item.month)} · นำเข้า ${formatDate(item.importedAt, true)}`}
+                stat={item.count.toLocaleString("th-TH")}
+                statLabel="observations"
+                onDetail={() => setDetail({ type: "csi", item })}
+                onDelete={() => removeImport(item)}
+              />
             ))}
           </div>
         )}
       </section>
 
-      <section className="report-block">
-        <div className="report-block-head">
-          <div><span className="form-badge">FORM</span><div><h2>ข้อมูลจากแบบประเมิน</h2><p>{savedCount.toLocaleString("th-TH")} รายการ</p></div></div>
-          {savedCount > 0 && <button className="danger-link" onClick={() => window.confirm("ลบแบบประเมินทั้งหมดใช่หรือไม่?") && onClearSaved()}>ล้างทั้งหมด</button>}
+      <section className={blockClass}>
+        <div className="mb-[11px] flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5">
+            <span className="grid size-9 place-items-center rounded-lg bg-sky-600 text-[7px] font-extrabold text-white">FORM</span>
+            <div><h2 className="text-[11px] font-bold">ข้อมูลจากแบบประเมิน</h2><p className="mt-0.5 text-[8px] text-slate-500">{savedCount.toLocaleString("th-TH")} รายการ</p></div>
+          </div>
+          {savedCount > 0 && <button className={clearClass} onClick={() => window.confirm("ลบแบบประเมินทั้งหมดใช่หรือไม่?") && onClearSaved()}>ล้างทั้งหมด</button>}
         </div>
-        {formRecords.length === 0 ? <div className="imported-empty">ยังไม่มีข้อมูลจากแบบประเมิน</div> : (
-          <div className="report-record-list">
+        {formRecords.length === 0 ? <div className={emptyClass}>ยังไม่มีข้อมูลจากแบบประเมิน</div> : (
+          <div className="grid gap-[7px]">
             {[...formRecords].reverse().map((item) => (
-              <article className="report-record" key={item.id}>
-                <span className="record-icon form">FORM</span>
-                <div className="record-main"><b>{item.department}</b><small>{formatDate(item.date)} · {item.profession}</small></div>
-                <div className="record-stat"><b>{item.moment?.match(/M[1-5]/)?.[0] || "—"}</b><small>Moment</small></div>
-                <div className="record-actions"><button onClick={() => setDetail({ type: "form", item })}>ดูรายละเอียด</button><button className="delete" onClick={() => removeForm(item)}>ลบ</button></div>
-              </article>
+              <ReportRecord
+                key={item.id}
+                badge="FORM"
+                badgeClass="bg-sky-600"
+                title={item.department}
+                subtitle={`${formatDate(item.date)} · ${item.profession}`}
+                stat={item.moment?.match(/M[1-5]/)?.[0] || "—"}
+                statLabel="Moment"
+                onDetail={() => setDetail({ type: "form", item })}
+                onDelete={() => removeForm(item)}
+              />
             ))}
           </div>
         )}

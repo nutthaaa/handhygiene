@@ -113,7 +113,6 @@ export function useHandHygieneData() {
     dashboardOptions,
     savedCount: formRecords.length,
     csiCount: csiRecords.length,
-    csiMonths: [...new Set(csiRecords.map((item) => item.csiMonth))].sort(),
     csiImports,
     addRecord,
     clearSavedRecords,

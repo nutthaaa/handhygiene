@@ -38,7 +38,6 @@ export default function App() {
           options={data.dashboardOptions}
           savedCount={data.savedCount}
           csiCount={data.csiCount}
-          csiMonths={data.csiMonths}
           onImportCsi={data.importCsi}
         />
       )}
