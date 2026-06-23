@@ -59,10 +59,10 @@ const deleteButton = "whitespace-nowrap rounded-[7px] border border-red-200 bg-r
 function ReportRecord({ badge, badgeClass, title, subtitle, stat, statLabel, onDetail, onDelete }) {
   return (
     <article className="grid grid-cols-[40px_minmax(0,1fr)_90px_auto] items-center gap-2.5 rounded-[9px] border border-slate-200 bg-slate-50/60 p-2.5 max-[1100px]:grid-cols-[38px_minmax(0,1fr)_auto]">
-      <span className={`grid size-[38px] place-items-center rounded-lg text-[7px] font-extrabold text-white ${badgeClass}`}>{badge}</span>
+      <span className={`grid size-[38px] place-items-center rounded-lg text-[11px] font-semibold text-white ${badgeClass}`}>{badge}</span>
       <div className="min-w-0">
-        <b className="block overflow-hidden text-ellipsis whitespace-nowrap text-[9px]">{title}</b>
-        <small className="mt-0.5 block text-[7px] text-slate-500">{subtitle}</small>
+        <b className="block overflow-hidden text-ellipsis font-semibold whitespace-nowrap text-[14px]">{title}</b>
+        <small className="mt-0.5 block text-[12px] text-slate-500">{subtitle}</small>
       </div>
       <div className="min-w-0 text-center max-[1100px]:hidden">
         <b className="block text-[11px] text-sky-900">{stat}</b>
@@ -107,20 +107,19 @@ export default function Reports({
   const clearClass = "border-0 bg-transparent text-[8px] text-red-600 underline";
 
   return (
-    <section className="mx-auto max-w-[1200px]">
+    <section className="mx-auto max-[720px]:min-h-0">
       <header className="mb-4">
         <div>
-          <p className="m-0 text-[9px] font-extrabold tracking-[1.3px] text-sky-600">DATA MANAGEMENT</p>
-          <h1 className="mt-0.5 text-[23px] font-bold tracking-[-.45px] max-[720px]:text-lg">รายงานและจัดการข้อมูล</h1>
-          <p className="mt-px text-[9px] text-slate-500">ตรวจสอบรายละเอียดและลบข้อมูลที่บันทึกผิดได้ทีละรายการ</p>
+          <h1 className="mt-0.5 text-[23px] font-bold tracking-[-.45px] text-slate-800 max-[720px]:text-lg">รายงานและจัดการข้อมูล</h1>
+          <p className="m-0 text-[14px] font-extrabold tracking-[1.3px] text-slate-500">DATA MANAGEMENT</p>
         </div>
       </header>
 
       <section className={blockClass}>
         <div className="mb-[11px] flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
-            <span className="grid size-[34px] place-items-center rounded-lg bg-emerald-600 text-[8px] font-extrabold text-white">CSI</span>
-            <div><h2 className="text-[11px] font-bold">ไฟล์ Excel จาก CSI</h2><p className="mt-0.5 text-[8px] text-slate-500">{csiCount.toLocaleString("th-TH")} observations · {csiImports.length} ไฟล์</p></div>
+            <span className="grid size-[38px] place-items-center rounded-lg bg-emerald-600 text-[12px] font-semibold text-white">CSI</span>
+            <div><h2 className="text-[14px] font-semibold">ไฟล์ Excel จาก CSI</h2><p className="mt-0.5 text-[12px] font-semibold text-slate-500">{csiCount.toLocaleString("th-TH")} observations · {csiImports.length} ไฟล์</p></div>
           </div>
           {csiImports.length > 0 && <button className={clearClass} onClick={() => window.confirm("ลบข้อมูล CSI ทั้งหมดใช่หรือไม่?") && onClearCsi()}>ล้างทั้งหมด</button>}
         </div>

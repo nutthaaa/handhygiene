@@ -8,30 +8,35 @@ import { calculateRate, exportResults, monthKey, monthLabel } from "../services/
 const KPI_COLORS = {
   green: {
     card: "border-green-700/20",
+    cardBg: "bg-green-50/55",
     iconBox: "bg-green-500/20",
     iconBorder: "border-green-500/30",
     icon: "text-green-700",
   },
   blue: {
     card: "border-blue-700/20",
+    cardBg: "bg-blue-50/55",
     iconBox: "bg-blue-500/20",
     iconBorder: "border-blue-500/30",
     icon: "text-blue-700",
   },
   teal: {
     card: "border-teal-700/20",
+    cardBg: "bg-teal-50/55",
     iconBox: "bg-teal-500/20",
     iconBorder: "border-teal-500/30",
     icon: "text-teal-700",
   },
   orange: {
     card: "border-orange-700/20",
+    cardBg: "bg-orange-50/55",
     iconBox: "bg-orange-500/20",
     iconBorder: "border-orange-500/30",
     icon: "text-orange-700",
   },
   gold: {
     card: "border-yellow-700/20",
+    cardBg: "bg-yellow-50/55",
     iconBox: "bg-yellow-500/20",
     iconBorder: "border-yellow-500/30",
     icon: "text-yellow-700",
@@ -92,6 +97,46 @@ function TargetArrowIcon({ className, size = 26 }) {
   );
 }
 
+/* SVG Repo: check-svgrepo-com.svg */
+function CheckIcon({ className, size = 24 }) {
+  return (
+    <svg
+      className={className}
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M6 12L10.2426 16.2426L18.727 7.75732" />
+    </svg>
+  );
+}
+
+/* SVG Repo: alert-triangle-svgrepo-com.svg */
+function AlertTriangleIcon({ className, size = 24 }) {
+  return (
+    <svg
+      className={className}
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M9.82664 2.22902C10.7938.590326 13.2063.590325 14.1735 2.22902L23.6599 18.3024C24.6578 19.9933 23.3638 22 21.4865 22H2.51362C.63634 22-.657696 19.9933.340215 18.3024L9.82664 2.22902ZM10.0586 7.05547C10.0268 6.48227 10.483 6 11.0571 6H12.9429C13.517 6 13.9732 6.48227 13.9414 7.05547L13.5525 14.0555C13.523 14.5854 13.0847 15 12.554 15H11.446C10.9153 15 10.477 14.5854 10.4475 14.0555L10.0586 7.05547ZM14 18C14 19.1046 13.1046 20 12 20C10.8954 20 10 19.1046 10 18C10 16.8954 10.8954 16 12 16C13.1046 16 14 16.8954 14 18Z"
+      />
+    </svg>
+  );
+}
+
 function Panel({ id, title, subtitle, className = "", titleClassName = "", action, children }) {
   return (
     <article
@@ -114,14 +159,14 @@ function KpiCard({ label, value, note, tone, icon }) {
   const colors = KPI_COLORS[tone];
   const KpiIcon = icon;
   return (
-    <article className={`relative flex min-h-[87px] items-center gap-2.5 overflow-hidden rounded-[13px] border bg-white p-[13px] shadow-[0_8px_25px_rgba(26,68,98,.08)] ${colors.card}`}>
+    <article className={`relative flex min-h-[87px] items-center gap-2.5 overflow-hidden rounded-[13px] border p-[13px] shadow-[0_8px_25px_rgba(26,68,98,.08)] ${colors.cardBg} ${colors.card}`}>
       <span className={`grid size-12 shrink-0 place-items-center rounded-full border font-extrabold ${colors.iconBox} ${colors.iconBorder}`}>
         <KpiIcon className={colors.icon} size={26} strokeWidth={2.2} aria-hidden="true" />
       </span>
       <div>
-        <small className="block text-xs text-slate-500">{label}</small>
-        <strong className="my-1 block text-2xl leading-[1.1] text-slate-800">{value}</strong>
-        <em className="block text-[8px] not-italic text-slate-500">{note}</em>
+        <small className="block text-sm font-extrabold text-slate-700">{label}</small>
+        <strong className={`my-1 block text-[31px] leading-[1] ${colors.icon}`}>{value}</strong>
+        <em className="block text-[12px] not-italic font-semibold text-slate-600">{note}</em>
       </div>
     </article>
   );
@@ -202,7 +247,7 @@ function TrendChart({ data }) {
       />
 
       {/* เส้นเกณฑ์ */}
-      <line x1={left} y1={y(85)} x2={plotRight} y2={y(85)} stroke="#c76c55" strokeWidth="2.5" strokeDasharray="9 6" />
+      <line x1={left} y1={y(80)} x2={plotRight} y2={y(80)} stroke="#c76c55" strokeWidth="2.5" strokeDasharray="9 6" />
 
       {/* เส้นข้อมูลและจุด */}
       <polyline points={points} fill="none" stroke="#3f9fa7" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
@@ -231,7 +276,7 @@ function TrendChart({ data }) {
         <line x1="0" y1="0" x2="34" y2="0" stroke="#3f9fa7" strokeWidth="4" strokeLinecap="round" />
         <text x="44" y="4" fill="#475569" fontSize="12" fontWeight="600">Compliance Rate (%)</text>
         <line x1="190" y1="0" x2="224" y2="0" stroke="#c76c55" strokeWidth="2.5" strokeDasharray="9 6" />
-        <text x="234" y="4" fill="#475569" fontSize="12" fontWeight="600">Target 85%</text>
+        <text x="234" y="4" fill="#475569" fontSize="12" fontWeight="600">Target 80%</text>
       </g>
     </svg>
   );
@@ -278,7 +323,7 @@ function MomentsChart({ data, total }) {
         <circle cx="90" cy="90" r="40" fill="#fff" />
         <text x="90" y="82" textAnchor="middle" fill="#334155" fontSize="9" fontWeight="600">Compliance</text>
         <text x="90" y="97" textAnchor="middle" fill="#334155" fontSize="9" fontWeight="600">by 5 Moments</text>
-        {segments.map((item) => (
+        {segments.filter((item) => item.value > 0).map((item) => (
           <text
             key={`label-${item.code}`}
             x={item.labelX}
@@ -286,7 +331,7 @@ function MomentsChart({ data, total }) {
             textAnchor="middle"
             fill="#ffffff"
             fontSize="9"
-            fontWeight="800"
+            fontWeight="600"
             paintOrder="stroke"
             stroke="rgba(0,0,0,.16)"
             strokeWidth=".8"
@@ -305,8 +350,8 @@ function MomentsChart({ data, total }) {
             >
               {index + 1}
             </span>
-            <span className="text-[10px] font-medium leading-[1.3] text-slate-600">{item.label}</span>
-            <strong className="text-xs font-extrabold text-slate-700">{pct(item.value)}</strong>
+            <span className="text-[14px] font-medium leading-[1.3] text-slate-700">{item.label}</span>
+            <strong className="text-sm font-bold text-slate-800">{pct(item.value)}</strong>
           </div>
         ))}
       </div>
@@ -338,6 +383,234 @@ function BarList({ data, ranked = false }) {
   );
 }
 
+/* สีแท่งกราฟประเภทบุคลากร เรียงตามรายการที่แสดง รองรับครบ 12 ประเภท */
+const WEEKDAY_COLUMNS = ["จันทร์", "อังคาร", "พุธ", "พฤหัส", "ศุกร์", "เสาร์", "อาทิตย์"];
+const HEATMAP_VISIBLE_ROWS = 5; // จำนวนเดือนที่แสดงก่อนเริ่มเลื่อน
+const HEATMAP_ROW_HEIGHT = 40; // ความสูงของแต่ละแถวเดือน
+const HEATMAP_COLORS = {
+  under75: "bg-[#F87171]/80",
+  from75To84: "bg-[#F6B23B]/90",
+  from85To89: "bg-[#FACC5A]/85",
+  from90Up: "bg-[#83C45A]/90",
+};
+
+const weekdayIndex = (value) => {
+  const date = new Date(`${value}T00:00:00`);
+  if (Number.isNaN(date.valueOf())) return null;
+  return (date.getDay() + 6) % 7;
+};
+
+const heatmapCellClass = (value) => {
+  if (value == null || value <= 0) return "bg-slate-50 text-slate-500";
+  if (value < 75) return HEATMAP_COLORS.under75;
+  if (value < 85) return HEATMAP_COLORS.from75To84;
+  if (value < 90) return HEATMAP_COLORS.from85To89;
+  return HEATMAP_COLORS.from90Up;
+};
+
+function MonthHeatmap({ data }) {
+  if (!data.length) {
+    return <div className="grid min-h-48 place-items-center text-[11px] text-slate-500">ยังไม่มีข้อมูล</div>;
+  }
+  const canScroll = data.length > HEATMAP_VISIBLE_ROWS;
+
+  return (
+    <div className="flex h-full min-h-0 flex-col">
+      <div className="grid min-w-[360px] grid-cols-[58px_repeat(7,minmax(38px,1fr))] gap-px pl-1.5 text-center text-[11px] font-bold">
+        <div className="bg-white py-1 text-left text-slate-600">เดือน</div>
+        {WEEKDAY_COLUMNS.map((day) => (
+          <div className="py-1 text-slate-600" key={day}>{day}</div>
+        ))}
+      </div>
+      <div
+        className={`min-h-0 pl-1.5 pr-1 [scrollbar-color:#cbd5e1_transparent] [scrollbar-width:thin] ${canScroll ? "overflow-auto" : "overflow-hidden"}`}
+        style={{ height: HEATMAP_ROW_HEIGHT * Math.min(data.length, HEATMAP_VISIBLE_ROWS) }}
+      >
+        <div
+          className="grid min-h-full min-w-[360px] grid-cols-[58px_repeat(7,minmax(38px,1fr))] gap-px text-center text-[11px] font-bold"
+          style={{ gridTemplateRows: `repeat(${data.length}, minmax(${HEATMAP_ROW_HEIGHT}px, 1fr))` }}
+        >
+          {data.map((row) => (
+            <div className="contents" key={row.key}>
+              <div className="sticky left-0 z-10 flex items-center bg-white py-2 pr-2 text-left text-[11px] font-bold text-slate-600">
+                {shortMonthLabel(row.key, row.label)}
+              </div>
+              {row.values.map((value, index) => (
+                <div
+                  className={`grid h-full min-h-[41px] place-items-center rounded-sm px-1 text-[12px] font-semibold text-slate-700 whitespace-nowrap ${heatmapCellClass(value)}`}
+                  key={`${row.key}-${index}`}
+                >
+                  {value == null || value <= 0 ? "–" : `${Math.round(value)}%`}
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="mt-4 flex shrink-0 flex-wrap items-center justify-center gap-4 text-[11px] font-bold leading-none text-slate-600">
+        <span className="inline-flex items-center gap-1.5 leading-none"><span className={`block size-3 shrink-0 rounded-sm ${HEATMAP_COLORS.under75}`} /> &lt; 75%</span>
+        <span className="inline-flex items-center gap-1.5 leading-none"><span className={`block size-3 shrink-0 rounded-sm ${HEATMAP_COLORS.from75To84}`} /> 75 - 84%</span>
+        <span className="inline-flex items-center gap-1.5 leading-none"><span className={`block size-3 shrink-0 rounded-sm ${HEATMAP_COLORS.from85To89}`} /> 85 - 89%</span>
+        <span className="inline-flex items-center gap-1.5 leading-none"><span className={`block size-3 shrink-0 rounded-sm ${HEATMAP_COLORS.from90Up}`} /> ≥ 90%</span>
+      </div>
+    </div>
+  );
+}
+
+const PROFESSION_BAR_COLORS = [
+  "#2f67a0",
+  "#4fb3bc",
+  "#8ac35b",
+  "#f3aa3f",
+  "#7d77c8",
+  "#ef865d",
+  "#58b7d5",
+  "#3f9f78",
+  "#d67ca5",
+  "#8b6f47",
+  "#667eea",
+  "#94a3b8",
+];
+
+function ProfessionChart({ data }) {
+  const visibleData = data.filter((item) => item.value > 0);
+  const compact = visibleData.length > 5;
+  if (!visibleData.length) {
+    return <div className="grid min-h-48 place-items-center text-[11px] text-slate-500">ยังไม่มีข้อมูล</div>;
+  }
+  return (
+    <div className="flex h-full min-h-0 flex-col justify-center pl-1.5">
+      <div className="relative h-[198px] shrink-0">
+        <span className="pointer-events-none absolute -bottom-2 left-[105px] top-0 z-10 w-px bg-slate-300" aria-hidden="true" />
+        <div className={`grid h-full auto-rows-[38px] overflow-y-auto pr-1 [scrollbar-color:#cbd5e1_transparent] [scrollbar-width:thin] ${compact ? "gap-1" : "gap-2.5"}`}>
+          {visibleData.map((item, index) => (
+            <div className="grid grid-cols-[95px_minmax(0,1fr)_48px] items-center gap-2.5" key={item.label}>
+              <div title={item.label}>
+                <span className={`line-clamp-2 font-medium leading-[1.2] text-slate-700 ${compact ? "text-[13px]" : "text-[13px]"}`}>
+                  {item.label}
+                </span>
+              </div>
+              <div className={`${compact ? "h-5" : "h-8"} overflow-hidden`}>
+                <div
+                  className="h-full rounded-r-md shadow-sm transition-[width]"
+                  style={{ width: `${item.value}%`, backgroundColor: PROFESSION_BAR_COLORS[index % PROFESSION_BAR_COLORS.length] }}
+                />
+              </div>
+              <strong className={`text-right font-bold text-slate-700 ${compact ? "text-[13px]" : "text-[15px]"}`}>{pct(item.value)}</strong>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="mt-2 grid shrink-0 grid-cols-[95px_minmax(0,1fr)_48px] items-start gap-2.5">
+        <span />
+        <div className="relative h-8 border-t border-slate-300">
+          {[0, 20, 40, 60, 80, 100].map((value) => (
+            <span className="absolute top-0" key={value} style={{ left: `${value}%` }}>
+              <i className="absolute left-0 top-0 h-1.5 w-px -translate-x-1/2 bg-slate-300" />
+              <b
+                className={`absolute top-2 whitespace-nowrap text-[11px] font-semibold text-slate-600 ${value === 0 ? "left-0" : value === 100 ? "right-0" : "left-0 -translate-x-1/2"
+                  }`}
+              >
+                {value}%
+              </b>
+            </span>
+          ))}
+        </div>
+        <span />
+      </div>
+    </div>
+  );
+}
+
+function DepartmentRanking({ data }) {
+  if (!data.length) {
+    return <div className="grid min-h-48 place-items-center text-[11px] text-slate-500">ยังไม่มีข้อมูล</div>;
+  }
+  const best = [...data].sort((a, b) => b.value - a.value).slice(0, 5);
+  const improve = [...data]
+    .filter((item) => item.value < 80)
+    .sort((a, b) => a.value - b.value)
+    .slice(0, 5);
+
+  const column = (items, type) => {
+    const good = type === "good";
+    return (
+      <div className="min-w-0">
+        <div className={` flex items-center justify-center gap-2 pb-1 text-center text-[13px] font-bold ${good ? "border-emerald-100 text-slate-600" : "border-orange-100 text-slate-600"}`}>
+          {good ? (
+            <span className="grid mb-2 size-6 place-items-center">
+              <CheckIcon className="text-emerald-600" size={28} />
+            </span>
+          ) : (
+            <span className="grid mb-2 size-6 place-items-center">
+              <AlertTriangleIcon className="text-orange-500" size={22} />
+            </span>
+          )}
+          {good ? "Top 5 แผนกที่ดีที่สุด" : "Top 5 แผนกที่ต้องปรับปรุง"}
+        </div>
+        <div className="grid gap-1.5">
+          {items.map((item, index) => (
+            <div
+              className={`grid grid-cols-[24px_minmax(0,1fr)_auto] items-center gap-2 rounded-md px-1.5 py-1.5 ${good ? "bg-emerald-600/5" : "bg-orange-600/5"}`}
+              key={`${type}-${item.label}`}
+            >
+              <span className={`grid size-6 place-items-center rounded-md text-[10px] font-extrabold text-white ${good ? "bg-emerald-500" : "bg-orange-500"}`}>
+                {index + 1}
+              </span>
+              <b className="overflow-hidden text-ellipsis whitespace-nowrap text-[12px] font-semibold text-slate-700" title={item.label}>{item.label}</b>
+              <strong className={`text-xs font-extrabold ${good ? "text-emerald-600" : "text-orange-600"}`}>{pct(item.value)}</strong>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="grid h-full grid-cols-2 gap-1 divide-x divide-slate-200 [&>div:first-child]:pr-2 [&>div:last-child]:pl-1">
+      {column(best, "good")}
+      {column(improve, "improve")}
+    </div>
+  );
+}
+
+const FOLLOW_UP_TARGET = 80;
+
+function FollowUpTable({ data }) {
+  if (!data.length) {
+    return (
+      <div className="grid h-full min-h-[170px] place-items-center rounded-lg bg-emerald-100/20 p-5 text-[14px] font-semibold text-emerald-700">
+        ผ่านเกณฑ์ {FOLLOW_UP_TARGET}%
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-lg border border-slate-100">
+      <div className="grid grid-cols-[minmax(0,1fr)_110px_90px] border-b border-slate-100 bg-slate-50 text-[12px] font-bold text-slate-600">
+        <div className="px-3 py-2">แผนก</div>
+        <div className="px-2 py-2 text-center">Compliance</div>
+        <div className="px-2 py-2 text-center">Gap</div>
+      </div>
+      <div className="min-h-0 flex-1 overflow-y-auto [scrollbar-color:#cbd5e1_transparent] [scrollbar-width:thin]">
+        {data.map((item) => {
+          const gap = item.value - FOLLOW_UP_TARGET;
+          return (
+            <div
+              className="grid grid-cols-[minmax(0,1fr)_110px_90px] items-center border-b border-slate-100 text-[12px] font-semibold text-slate-600 last:border-b-0"
+              key={item.label}
+            >
+              <div className="truncate px-4 py-2" title={item.label}>{item.label}</div>
+              <div className="px-2 py-2 text-center font-extrabold text-slate-600">{pct(item.value)}</div>
+              <div className="px-2 py-2 text-center font-extrabold text-red-600">{gap.toFixed(1)}%</div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 export default function Dashboard({ records, options, savedCount, csiCount, onImportCsi }) {
   const csiFileInput = useRef(null);
   const [csiMonth] = useState(new Date().toISOString().slice(0, 7));
@@ -364,18 +637,33 @@ export default function Dashboard({ records, options, savedCount, csiCount, onIm
   );
   const departmentRates = useMemo(() => Object.entries(groupBy(filtered, (item) => item.department))
     .map(([label, rows]) => ({ label, count: rows.length, value: calculateRate(rows).complianceRate }))
-    .sort((a, b) => b.value - a.value).slice(0, 8), [filtered]);
+    .sort((a, b) => b.value - a.value), [filtered]);
   const professionRates = useMemo(() => Object.entries(groupBy(filtered, (item) => item.profession))
-    .map(([label, rows]) => ({ label, count: rows.length, value: calculateRate(rows).complianceRate }))
-    .sort((a, b) => b.count - a.count).slice(0, 7), [filtered]);
-  const periodRates = trend.map((item) => ({
-    label: item.label,
-    value: item.value,
-  }));
+    .map(([label, rows]) => {
+      const rate = calculateRate(rows);
+      return {
+        label,
+        count: rate.completeDenominator,
+        complete: rate.complete,
+        incomplete: rate.completeDenominator - rate.complete,
+        value: rate.completeRate,
+      };
+    })
+    .sort((a, b) => b.count - a.count), [filtered]);
+  const periodHeatmap = useMemo(() => Object.entries(groupBy(filtered, (item) => monthKey(item.date)))
+    .filter(([key]) => key)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([key, rows]) => {
+      const values = WEEKDAY_COLUMNS.map((_, dayIndex) => {
+        const dayRows = rows.filter((row) => weekdayIndex(row.date) === dayIndex);
+        return dayRows.length ? calculateRate(dayRows).complianceRate : null;
+      });
+      return { key, label: monthLabel(key), values };
+    }), [filtered]);
   const attention = [...departmentRates]
-    .filter((item) => item.value < 85)
+    .filter((item) => item.value < FOLLOW_UP_TARGET)
     .sort((a, b) => a.value - b.value)
-    .slice(0, 7);
+    .slice(0, 5);
   const updateFilter = (key) => (event) => setFilters((current) => ({ ...current, [key]: event.target.value }));
 
   async function handleCsiFile(event) {
@@ -449,30 +737,22 @@ export default function Dashboard({ records, options, savedCount, csiCount, onIm
 
       {/* ===== KPI ===== */}
       <section className="mb-[11px] grid grid-cols-5 gap-2.5 max-[1100px]:grid-cols-3 max-[720px]:grid-cols-2">
-        <KpiCard label="Overall Compliance Rate" value={pct(stats.complianceRate)} note="เป้าหมาย ≥ 85%" tone="green" icon={HandHeart} />
-        <KpiCard label="Total Observations" value={stats.denominator.toLocaleString("th-TH")} note={`แบบประเมิน ${savedCount} + CSI ${csiCount}`} tone="blue" icon={ClipboardList} />
-        <KpiCard label="Complete 6 Steps" value={pct(stats.completeRate)} note={`${stats.complete.toLocaleString("th-TH")}/${stats.completeDenominator.toLocaleString("th-TH")} รายการที่มีข้อมูล`} tone="teal" icon={UsersRound} />
-        <KpiCard label="Non-compliant Actions" value={stats.nonCompliant.toLocaleString("th-TH")} note="ไม่ทำความสะอาดมือ" tone="orange" icon={HandRaisedSlashIcon} />
-        <KpiCard label="Observation Coverage" value={new Set(filtered.map((item) => item.department)).size.toLocaleString("th-TH")} note="หน่วยงานที่มีข้อมูล" tone="gold" icon={TargetArrowIcon} />
+        <KpiCard label="Overall Compliance Rate" value={pct(stats.complianceRate)} note="เป้าหมาย ≥ 80%" tone="green" icon={HandHeart} />
+        <KpiCard label="Total Observations" value={stats.denominator.toLocaleString("th-TH")} note="ครั้ง (Times)" tone="blue" icon={ClipboardList} />
+        <KpiCard label="Complete 6 Steps" value={pct(stats.completeRate)} note="ครั้ง (Times)" tone="teal" icon={UsersRound} />
+        <KpiCard label="Non-compliant Actions" value={stats.nonCompliant.toLocaleString("th-TH")} note="ครั้ง (Times)" tone="orange" icon={HandRaisedSlashIcon} />
+        <KpiCard label="Observation Coverage" value={new Set(filtered.map((item) => item.department)).size.toLocaleString("th-TH")} note="เป้าหมาย 1,200 ครั้ง" tone="gold" icon={TargetArrowIcon} />
       </section>
 
       {/* ===== กราฟและตาราง ===== */}
       <section className="grid w-full flex-1 grid-cols-[repeat(3,minmax(0,1fr))] grid-rows-2 items-stretch gap-[11px] max-[720px]:block [&>article]:h-full [&>article]:max-[720px]:mb-2.5 [&>article]:max-[720px]:h-auto">
         <Panel id="time-location" title="แนวโน้มอัตราการล้างมือ (Compliance Trend)" titleClassName="!text-[15px] mb-1" className="!p-4 [&>div:first-child]:!mb-0.5 [&>div:first-child]:px-1.5 [&>div:last-child]:mt-1 [&>div:last-child]:min-h-0" action={<span className="rounded-xl bg-teal-50 px-[7px] py-1 text-[8px] text-teal-600"></span>}><TrendChart data={trend} /></Panel>
         <Panel id="moments" title="อัตราการล้างมือ จำแนกตาม 5 Moments" titleClassName="!text-[15px] mb-1" className="!p-4 [&>div:first-child]:!mb-0.5 [&>div:first-child]:px-1.5 [&>div:last-child]:mt-1 [&>div:last-child]:min-h-0" action={<span className="rounded-xl bg-teal-50 px-[7px] py-1 text-[8px] text-teal-600"></span>}><MomentsChart data={momentData} total={momentObservationCount} /></Panel>
-        <Panel id="staff" title="อัตราการล้างมือ จำแนกตามประเภทบุคลากร" action={<span className="rounded-xl bg-teal-50 px-[7px] py-1 text-[8px] text-teal-600"></span>}><BarList data={professionRates} /></Panel>
-        <Panel id="departments" title="อัตราการล้างมือ จำแนกตามแผนก" action={<span className="rounded-xl bg-teal-50 px-[7px] py-1 text-[8px] text-teal-600"></span>}><BarList data={departmentRates} ranked /></Panel>
-        <Panel id="periods" title="อัตราการล้างมือ จำแนกตามช่วงเวลา" action={<span className="rounded-xl bg-teal-50 px-[7px] py-1 text-[8px] text-teal-600"></span>}><BarList data={periodRates} /></Panel>
-        <Panel id="non-compliance" title="แผนกที่ต้องได้รับการติดตาม (ต่ำกว่าเป้าหมาย 85)" action={<span className="rounded-xl bg-teal-50 px-[7px] py-1 text-[8px] text-teal-600"></span>} subtitle="ต่ำกว่าเกณฑ์ 85%">
-          {attention.length === 0 ? (
-            <div className="grid h-full min-h-[170px] place-items-center rounded-lg bg-emerald-50 p-5 text-[10px] font-semibold text-emerald-700">
-              ทุกแผนกผ่านเกณฑ์ 85%
-            </div>
-          ) : (
-          <div className="grid h-full auto-rows-fr gap-2">
-              {attention.map((item, index) => <div className="grid grid-cols-[25px_1fr_auto] items-center gap-2 rounded-lg bg-slate-50 p-2" key={item.label}><span className="grid size-[25px] place-items-center rounded-full bg-orange-100 text-[9px] font-extrabold text-orange-500">{index + 1}</span><div><b className="block text-[9px]">{item.label}</b><small className="block text-[8px] text-slate-500">{item.count} observations</small></div><strong className="text-[10px] text-orange-500">{pct(item.value)}</strong></div>)}
-            </div>
-          )}
+        <Panel id="staff" title="อัตราการล้างมือ จำแนกตามประเภทบุคลากร" titleClassName="!text-[15px] mb-1" className="!p-4 [&>div:first-child]:!mb-0.5 [&>div:first-child]:px-1.5 [&>div:last-child]:mt-1 [&>div:last-child]:min-h-0" action={<span className="rounded-xl bg-teal-50 px-[7px] py-1 text-[8px] text-teal-600"></span>}><ProfessionChart data={professionRates} /></Panel>
+        <Panel id="departments" title="อัตราการล้างมือ จำแนกตามแผนก" titleClassName="!text-[15px] mb-1" className="!p-4 [&>div:first-child]:!mb-0.5 [&>div:first-child]:px-1.5 [&>div:last-child]:mt-1 [&>div:last-child]:min-h-0" action={<span className="rounded-xl bg-teal-50 px-[7px] py-1 text-[8px] text-teal-600"></span>}><DepartmentRanking data={departmentRates} /></Panel>
+        <Panel id="periods" title="อัตราการล้างมือ จำแนกตามช่วงเวลา" titleClassName="!text-[15px] mb-1" className="!p-4 [&>div:first-child]:!mb-0.5 [&>div:first-child]:px-1.5 [&>div:last-child]:mt-1 [&>div:last-child]:min-h-0" action={<span className="rounded-xl bg-teal-50 px-[7px] py-1 text-[8px] text-teal-600"></span>}><MonthHeatmap data={periodHeatmap} /></Panel>
+        <Panel id="non-compliance" title={`แผนกที่ต้องได้รับการติดตาม (ต่ำกว่าเป้าหมาย ${FOLLOW_UP_TARGET}%)`} titleClassName="!text-[15px] mb-1" className="!p-4 [&>div:first-child]:!mb-0.5 [&>div:first-child]:px-1.5 [&>div:last-child]:mt-1 [&>div:last-child]:min-h-0" action={<span className="rounded-xl bg-teal-50 px-[7px] py-1 text-[8px] text-teal-600"></span>}>
+          <FollowUpTable data={attention} />
         </Panel>
       </section>
     </div>

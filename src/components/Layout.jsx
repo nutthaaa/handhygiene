@@ -13,8 +13,8 @@ export function Layout({ activePage, savedCount, csiCount, children }) {
         <a className="flex items-center gap-2.5 px-[7px] pb-[25px] text-left text-white no-underline max-[1100px]:justify-center max-[720px]:hidden" href="/">
           <span className="grid place-items-center text-teal-300"><Icon name="hand" size={34} /></span>
           <span className="max-[1100px]:hidden">
-            <strong className="block text-lg leading-[1.1]">CleanHands+</strong>
-            <small className="mt-0.5 block text-[9px] opacity-65">Hand Hygiene Monitoring</small>
+            <strong className="block mt-1 text-lg leading-[1.1]">CleanHands+</strong>
+            <small className="mt-1 block text-[10px] opacity-65">Hand Hygiene Monitoring</small>
           </span>
         </a>
 
@@ -22,15 +22,15 @@ export function Layout({ activePage, savedCount, csiCount, children }) {
           <a className={navClass(activePage === "dashboard")} href="/">
             <Icon name="home" />
             <span className="max-[1100px]:hidden">
-              <b className="block text-[10px] font-semibold">ภาพรวม Dashboard</b>
-              <small className="mt-px block text-[7px] opacity-55">Overview</small>
+              <b className="block text-[14px] font-semibold text-white">ภาพรวม</b>
+              <small className="mt-px block text-[11px] font-medium text-white opacity-75">Overview</small>
             </span>
           </a>
           <a className={navClass(activePage === "reports")} href="/reports">
             <Icon name="report" />
             <span className="max-[1100px]:hidden">
-              <b className="block text-[10px] font-semibold">รายงาน</b>
-              <small className="mt-px block text-[7px] opacity-55">Reports</small>
+              <b className="block text-[14px] font-semibold text-white">รายงาน</b>
+              <small className="mt-px block text-[11px] font-medium text-white opacity-75">Reports</small>
             </span>
           </a>
         </nav>
@@ -39,8 +39,8 @@ export function Layout({ activePage, savedCount, csiCount, children }) {
           <span className="mt-1 size-2 rounded-full bg-emerald-400 shadow-[0_0_0_5px_rgba(88,212,157,.13)]" />
           <Icon name="database" size={18} />
           <div className="max-[1100px]:hidden">
-            <b className="block text-[10px]">Data Connected</b>
-            <small className="mt-[3px] block text-[8px] opacity-60">แบบประเมิน {savedCount} รายการ<br />CSI {csiCount} observations</small>
+            <b className="block text-[14px] ml-1">Data Connected</b>
+            <small className="mt-[3px] block text-[11px] opacity-75 ml-1">แบบประเมิน {savedCount} รายการ<br /></small>
           </div>
         </div>
       </aside>

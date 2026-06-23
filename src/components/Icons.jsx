@@ -1,4 +1,4 @@
-export function Icon({ name, size = 20 }) {
+export function Icon({ name, size = 24 }) {
   const paths = {
     home: <><path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10M9 20v-6h6v6"/></>,
     department: <><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h2M14 7h2M8 11h2M14 11h2M9 21v-5h6v5"/></>,
