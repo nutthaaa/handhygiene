@@ -56,10 +56,10 @@ function DetailModal({ detail, onClose }) {
 const actionButton = "whitespace-nowrap rounded-[7px] border border-slate-200 bg-white px-2 py-1.5 text-[8px] text-sky-900";
 const deleteButton = "whitespace-nowrap rounded-[7px] border border-red-200 bg-red-50 px-2 py-1.5 text-[8px] text-red-700";
 
-function ReportRecord({ badge, badgeClass, title, subtitle, stat, statLabel, onDetail, onDelete }) {
+function ReportRecord({ badge, badgeClass, title, subtitle, stat, statLabel, hideBadge = false, onDetail, onDelete }) {
   return (
-    <article className="grid grid-cols-[40px_minmax(0,1fr)_90px_auto] items-center gap-2.5 rounded-[9px] border border-slate-200 bg-slate-50/60 p-2.5 max-[1100px]:grid-cols-[38px_minmax(0,1fr)_auto]">
-      <span className={`grid size-[38px] place-items-center rounded-lg text-[11px] font-semibold text-white ${badgeClass}`}>{badge}</span>
+    <article className={`grid items-center gap-2.5 rounded-[9px] border border-slate-200 bg-slate-50/60 p-2.5 max-[1100px]:grid-cols-[minmax(0,1fr)_auto] ${hideBadge ? "grid-cols-[minmax(0,1fr)_90px_auto]" : "grid-cols-[40px_minmax(0,1fr)_90px_auto]"}`}>
+      {!hideBadge && <span className={`grid size-[38px] place-items-center rounded-lg text-[11px] font-semibold text-white ${badgeClass}`}>{badge}</span>}
       <div className="min-w-0">
         <b className="block overflow-hidden text-ellipsis font-semibold whitespace-nowrap text-[14px]">{title}</b>
         <small className="mt-0.5 block text-[12px] text-slate-500">{subtitle}</small>
@@ -128,8 +128,7 @@ export default function Reports({
             {csiImports.map((item) => (
               <ReportRecord
                 key={item.month}
-                badge="XLS"
-                badgeClass="bg-emerald-600"
+                hideBadge
                 title={item.fileName}
                 subtitle={`เดือนข้อมูล ${monthLabel(item.month)} · นำเข้า ${formatDate(item.importedAt, true)}`}
                 stat={item.count.toLocaleString("th-TH")}
@@ -155,8 +154,7 @@ export default function Reports({
             {[...formRecords].reverse().map((item) => (
               <ReportRecord
                 key={item.id}
-                badge="FORM"
-                badgeClass="bg-sky-600"
+                hideBadge
                 title={item.department}
                 subtitle={`${formatDate(item.date)} · ${item.profession}`}
                 stat={item.moment?.match(/M[1-5]/)?.[0] || "—"}
