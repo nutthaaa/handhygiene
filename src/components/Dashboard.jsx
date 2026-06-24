@@ -687,57 +687,55 @@ export default function Dashboard({ records, options, savedCount, csiCount, onIm
   return (
     <div id="overview" className="flex min-h-[calc(100vh-54px)] scroll-mt-5 flex-col max-[720px]:min-h-0">
       {/* ===== ส่วนหัว ===== */}
-      <header className="mb-4 grid grid-cols-[1fr_auto_1fr] items-center gap-5 max-[900px]:grid-cols-1 max-[900px]:justify-items-start">
+      <header className="mb-4 flex items-center justify-between gap-5 max-[900px]:flex-col max-[900px]:items-start">
         <div>
           <h1 className="mt-0.5 text-[23px] font-bold tracking-[-.45px] text-slate-800 max-[720px]:text-lg">ภาพรวมการล้างมือของโรงพยาบาล</h1>
           <p className="m-0 text-[14px] font-extrabold tracking-[1.3px] text-slate-500">HAND HYGIENE MONITORING</p>
         </div>
-        <img className="h-[34px] w-auto object-contain max-[900px]:justify-self-center" src="/bdms-logo.png" alt="BDMS Bangkok Dusit Medical Services" />
-        <div className="flex justify-end gap-2 max-[900px]:w-full max-[900px]:justify-start max-[720px]:flex-wrap">
+        <img className="h-[37px] w-auto shrink-0 object-contain" src="/bangkok-hospital-logo-navy-trim.png" alt="Bangkok Hospital" />
+      </header>
+
+      <div className="mb-3 flex items-center justify-between gap-3 max-[900px]:items-start max-[720px]:flex-col">
+        <div className="flex cursor-pointer items-center gap-[9px] max-[720px]:w-full max-[720px]:flex-wrap">
+          <label className={fieldClass}>
+            หน่วยงาน
+            <select className={`${selectClass} cursor-pointer`} value={filters.department} onChange={updateFilter("department")}>
+              <option value="all">ทุกหน่วยงาน</option>
+              {options.department.map((item) => <option key={item}>{item}</option>)}
+            </select>
+          </label>
+          <label className={fieldClass}>
+            กลุ่มบุคลากร
+            <select className={`${selectClass} cursor-pointer`} value={filters.profession} onChange={updateFilter("profession")}>
+              <option value="all">ทุกกลุ่มบุคลากร</option>
+              {options.profession.map((item) => <option key={item}>{item}</option>)}
+            </select>
+          </label>
+        </div>
+        <div className="flex justify-end gap-2 max-[900px]:justify-start max-[720px]:w-full max-[720px]:flex-wrap">
           <a className="inline-flex items-center whitespace-nowrap rounded-[9px] border border-slate-200 bg-white px-[13px] py-2 text-xs font-semibold text-slate-700 no-underline hover:bg-sky-800 hover:text-white" href="/survey">
             แบบประเมิน
           </a>
-          <button className="inline-flex items-center whitespace-nowrap border border-slate-200 rounded-[9px] bg-white px-[13px] py-2 text-xs font-semibold text-slate-700 hover:bg-sky-800 hover:text-white disabled:opacity-60" type="button" onClick={() => csiFileInput.current?.click()} disabled={csiImporting}>
+          <button className="inline-flex items-center whitespace-nowrap border border-slate-200 rounded-[9px] bg-white px-[13px] py-2 text-xs font-semibold text-slate-700 hover:bg-sky-800 hover:text-white disabled:opacity-60 cursor-pointer" type="button" onClick={() => csiFileInput.current?.click()} disabled={csiImporting}>
             {csiImporting ? "กำลังนำเข้า..." : "นำเข้า Excel"}
           </button>
-          <label className="flex items-center gap-2 rounded-[9px] border border-slate-200 bg-white px-[11px] py-2 text-slate-500 max-[720px]:max-w-[170px]">
+          <label className="flex cursor-pointer items-center gap-2 rounded-[9px] border border-slate-200 bg-white px-[11px] py-2 text-slate-500 max-[720px]:max-w-[170px]">
             <Icon name="calendar" size={17} />
-            <select className={selectClass} value={filters.period} onChange={updateFilter("period")}>
+            <select className={`${selectClass} cursor-pointer`} value={filters.period} onChange={updateFilter("period")}>
               <option value="all">ทุกเดือน</option>
               {periods.map((item) => <option value={item} key={item}>{monthLabel(item)}</option>)}
             </select>
           </label>
           <input ref={csiFileInput} type="file" accept=".xlsx,.xls" hidden onChange={handleCsiFile} />
-          <button className="whitespace-nowrap rounded-[9px] border border-slate-200 bg-white px-[11px] py-2 text-xs font-semibold text-slate-700 hover:bg-sky-800 hover:text-white" onClick={() => exportResults(records)}>ส่งออก Excel</button>
+          <button className="whitespace-nowrap rounded-[9px] border border-slate-200 bg-white px-[11px] py-2 text-xs font-semibold text-slate-700 hover:bg-sky-800 hover:text-white cursor-pointer" onClick={() => exportResults(records)}>ส่งออก Excel</button>
         </div>
-      </header>
+      </div>
 
       {csiMessage && (
         <div className={`mb-2.5 rounded-lg px-[11px] py-2 text-[9px] ${csiMessage.includes("ไม่สำเร็จ") ? "bg-red-50 text-red-700" : "bg-emerald-50 text-emerald-700"}`}>
           {csiMessage}
         </div>
       )}
-
-      {/* ===== ตัวกรอง ===== */}
-      <div className="mb-3 flex items-center gap-[9px] max-[720px]:flex-wrap">
-        <label className={fieldClass}>
-          หน่วยงาน
-          <select className={selectClass} value={filters.department} onChange={updateFilter("department")}>
-            <option value="all">ทุกหน่วยงาน</option>
-            {options.department.map((item) => <option key={item}>{item}</option>)}
-          </select>
-        </label>
-        <label className={fieldClass}>
-          กลุ่มบุคลากร
-          <select className={selectClass} value={filters.profession} onChange={updateFilter("profession")}>
-            <option value="all">ทุกกลุ่มบุคลากร</option>
-            {options.profession.map((item) => <option key={item}>{item}</option>)}
-          </select>
-        </label>
-        <div className="ml-auto text-xs text-slate-500 max-[720px]:ml-0 max-[720px]:w-full">
-          <strong className="text-xs text-sky-900">{filtered.length.toLocaleString("th-TH")}</strong> observations
-        </div>
-      </div>
 
       {/* ===== KPI ===== */}
       <section className="mb-[11px] grid grid-cols-5 gap-2.5 max-[1100px]:grid-cols-3 max-[720px]:grid-cols-2">

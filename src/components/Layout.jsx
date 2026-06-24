@@ -53,7 +53,7 @@ export function Layout({ activePage, savedCount, csiCount, user, onLogout, child
             <button
               type="button"
               onClick={onLogout}
-              className="flex w-full items-center justify-center gap-2 rounded-[9px] border border-white/20 px-2.5 py-2 text-[13px] font-semibold text-white/85 transition hover:bg-white/15 max-[720px]:w-auto"
+              className="flex w-full items-center justify-center gap-2 rounded-[9px] border border-white/20 px-2.5 py-2 text-[13px] font-semibold text-white/85 transition hover:bg-white/15 max-[720px]:w-auto cursor-pointer"
             >
               <Icon name="logout" size={16} />
               <span className="max-[1100px]:hidden">ออกจากระบบ</span>

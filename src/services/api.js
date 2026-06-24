@@ -1,4 +1,4 @@
-const API_BASE = (import.meta.env.VITE_API_URL || "http://localhost:4000/api").replace(/\/+$/, "");
+const API_BASE = (import.meta.env.VITE_API_URL || "https://bdms-handhygiene-api.ngrok.dev/api").replace(/\/+$/, "");
 const TOKEN_KEY = "cleanhands-token";
 
 export function getToken() {

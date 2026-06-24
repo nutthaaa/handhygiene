@@ -35,16 +35,16 @@ function DetailModal({ detail, onClose }) {
       <section className="max-h-[calc(100vh-40px)] w-full max-w-[560px] overflow-y-auto rounded-[14px] bg-white p-[18px] shadow-2xl" role="dialog" aria-modal="true" onClick={(event) => event.stopPropagation()}>
         <div className="flex justify-between gap-[15px] border-b border-slate-200 pb-3">
           <div>
-            <small className="text-[8px] font-extrabold tracking-[1px] text-sky-600">{isCsi ? "CSI IMPORT" : "OBSERVATION FORM"}</small>
-            <h2 className="mt-[3px] text-base font-bold">{isCsi ? detail.item.fileName : detail.item.department}</h2>
+            <small className="text-[13px] mb-1 font-extrabold tracking-[1px] text-slate-700">{isCsi ? "CSI IMPORT" : "OBSERVATION FORM"}</small>
+            <h2 className="mt-[3px] text-sm font-semibold mt-1">{isCsi ? detail.item.fileName : detail.item.department}</h2>
           </div>
-          <button className="grid size-[30px] place-items-center rounded-full bg-slate-100 text-xl text-slate-500" onClick={onClose} aria-label="ปิด">×</button>
+          <button className="grid size-[30px] cursor-pointer place-items-center rounded-full bg-slate-50 text-xl text-slate-600" onClick={onClose} aria-label="ปิด">×</button>
         </div>
-        <dl className="mt-3 grid">
+        <dl className="grid">
           {rows.map(([label, value]) => (
-            <div className="grid grid-cols-[145px_1fr] gap-3 border-b border-slate-100 px-[3px] py-[9px] max-[720px]:grid-cols-1 max-[720px]:gap-[3px]" key={label}>
-              <dt className="text-[9px] text-slate-500">{label}</dt>
-              <dd className="m-0 text-[10px] leading-6 text-slate-700">{value || "ไม่ระบุ"}</dd>
+            <div className="grid grid-cols-[145px_1fr] gap-2 border-b border-slate-100 px-[3px] py-[9px] max-[720px]:grid-cols-1 max-[720px]:gap-[3px]" key={label}>
+              <dt className="text-[13px] font-semibold text-slate-700 p-1">{label}</dt>
+              <dd className="m-0 text-[13px] p-1 leading-6 text-slate-700">{value || "ไม่ระบุ"}</dd>
             </div>
           ))}
         </dl>
@@ -53,8 +53,8 @@ function DetailModal({ detail, onClose }) {
   );
 }
 
-const actionButton = "whitespace-nowrap rounded-[8px] border border-slate-200 bg-white px-3 py-2 text-[12px] font-medium text-sky-900";
-const deleteButton = "whitespace-nowrap rounded-[8px] border border-red-200 bg-red-50 px-3 py-2 text-[12px] font-medium text-red-700";
+const actionButton = "cursor-pointer whitespace-nowrap rounded-[8px] border border-slate-200 bg-white px-3 py-2 text-[12px] font-medium text-sky-900";
+const deleteButton = "cursor-pointer whitespace-nowrap rounded-[8px] border border-red-200 bg-red-50 px-3 py-2 text-[12px] font-medium text-red-700";
 
 function ReportRecord({ badge, badgeClass, title, subtitle, stat, statLabel, hideBadge = false, onDetail, onDelete }) {
   return (
@@ -103,16 +103,17 @@ export default function Reports({
   }
 
   const blockClass = "mb-[13px] rounded-xl border border-slate-200 bg-white p-3.5 shadow-[0_8px_25px_rgba(26,68,98,.08)]";
-  const emptyClass = "rounded-lg bg-slate-50 p-3 text-center text-[9px] text-slate-500";
-  const clearClass = "border-0 bg-transparent text-[12px] font-medium text-red-600 underline";
+  const emptyClass = "rounded-lg bg-slate-50 p-3 text-center text-[12px] text-slate-500";
+  const clearClass = "cursor-pointer border-0 bg-transparent text-[12px] font-medium text-red-600 underline";
 
   return (
     <section className="mx-auto max-[720px]:min-h-0">
-      <header className="mb-4">
+      <header className="mb-4 flex items-center justify-between gap-5 max-[900px]:flex-col max-[900px]:items-start">
         <div>
           <h1 className="mt-0.5 text-[23px] font-bold tracking-[-.45px] text-slate-800 max-[720px]:text-lg">รายงานและจัดการข้อมูล</h1>
           <p className="m-0 text-[14px] font-extrabold tracking-[1.3px] text-slate-500">DATA MANAGEMENT</p>
         </div>
+        <img className="h-[37px] w-auto shrink-0 object-contain" src="/bangkok-hospital-logo-navy-trim.png" alt="Bangkok Hospital" />
       </header>
 
       <section className={blockClass}>
