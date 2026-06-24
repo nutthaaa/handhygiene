@@ -14,6 +14,7 @@ export function Icon({ name, size = 24 }) {
     calendar: <><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></>,
     hand: <><path d="M7 11V5a1.5 1.5 0 0 1 3 0v5"/><path d="M10 9V3.5a1.5 1.5 0 0 1 3 0V9"/><path d="M13 9V5a1.5 1.5 0 0 1 3 0v6"/><path d="M16 10V7a1.5 1.5 0 0 1 3 0v7c0 5-3 8-7 8-3 0-5-1-7-4l-2-3a1.7 1.7 0 0 1 2.7-2l1.3 1.3"/></>,
     database: <><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></>,
+    logout: <><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></>,
   };
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
