@@ -53,22 +53,22 @@ function DetailModal({ detail, onClose }) {
   );
 }
 
-const actionButton = "whitespace-nowrap rounded-[7px] border border-slate-200 bg-white px-2 py-1.5 text-[8px] text-sky-900";
-const deleteButton = "whitespace-nowrap rounded-[7px] border border-red-200 bg-red-50 px-2 py-1.5 text-[8px] text-red-700";
+const actionButton = "whitespace-nowrap rounded-[8px] border border-slate-200 bg-white px-3 py-2 text-[12px] font-medium text-sky-900";
+const deleteButton = "whitespace-nowrap rounded-[8px] border border-red-200 bg-red-50 px-3 py-2 text-[12px] font-medium text-red-700";
 
 function ReportRecord({ badge, badgeClass, title, subtitle, stat, statLabel, hideBadge = false, onDetail, onDelete }) {
   return (
-    <article className={`grid items-center gap-2.5 rounded-[9px] border border-slate-200 bg-slate-50/60 p-2.5 max-[1100px]:grid-cols-[minmax(0,1fr)_auto] ${hideBadge ? "grid-cols-[minmax(0,1fr)_90px_auto]" : "grid-cols-[40px_minmax(0,1fr)_90px_auto]"}`}>
-      {!hideBadge && <span className={`grid size-[38px] place-items-center rounded-lg text-[11px] font-semibold text-white ${badgeClass}`}>{badge}</span>}
+    <article className={`grid items-center gap-3 rounded-[9px] border border-slate-200 bg-slate-50/60 p-3 max-[1100px]:grid-cols-[minmax(0,1fr)_auto] ${hideBadge ? "grid-cols-[minmax(0,1fr)_120px_auto]" : "grid-cols-[40px_minmax(0,1fr)_120px_auto]"}`}>
+      {!hideBadge && <span className={`grid size-[38px] place-items-center rounded-lg text-[12px] font-medium text-white ${badgeClass}`}>{badge}</span>}
       <div className="min-w-0">
-        <b className="block overflow-hidden text-ellipsis font-semibold whitespace-nowrap text-[14px]">{title}</b>
-        <small className="mt-0.5 block text-[12px] text-slate-500">{subtitle}</small>
+        <b className="block overflow-hidden text-ellipsis whitespace-nowrap text-[15px] font-medium">{title}</b>
+        <small className="mt-0.5 block text-[13px] font-medium text-slate-500">{subtitle}</small>
       </div>
       <div className="min-w-0 text-center max-[1100px]:hidden">
-        <b className="block text-[11px] text-sky-900">{stat}</b>
-        <small className="block text-[7px] text-slate-500">{statLabel}</small>
+        <b className="block text-[15px] font-medium text-sky-900">{stat}</b>
+        <small className="block text-[10px] font-medium text-slate-500">{statLabel}</small>
       </div>
-      <div className="flex gap-[5px] max-[1100px]:col-start-2 max-[1100px]:col-end-[-1] max-[1100px]:justify-end">
+      <div className="flex gap-2 max-[1100px]:col-start-2 max-[1100px]:col-end-[-1] max-[1100px]:justify-end">
         <button className={actionButton} onClick={onDetail}>ดูรายละเอียด</button>
         <button className={deleteButton} onClick={onDelete}>ลบ</button>
       </div>
@@ -104,7 +104,7 @@ export default function Reports({
 
   const blockClass = "mb-[13px] rounded-xl border border-slate-200 bg-white p-3.5 shadow-[0_8px_25px_rgba(26,68,98,.08)]";
   const emptyClass = "rounded-lg bg-slate-50 p-3 text-center text-[9px] text-slate-500";
-  const clearClass = "border-0 bg-transparent text-[8px] text-red-600 underline";
+  const clearClass = "border-0 bg-transparent text-[12px] font-medium text-red-600 underline";
 
   return (
     <section className="mx-auto max-[720px]:min-h-0">
@@ -119,7 +119,7 @@ export default function Reports({
         <div className="mb-[11px] flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
             <span className="grid size-[38px] place-items-center rounded-lg bg-emerald-600 text-[13px] font-semibold text-white">CSI</span>
-            <div><h2 className="text-[16px] font-semibold">ไฟล์ Excel จาก CSI</h2><p className="mt-0.5 text-[12px] font-semibold text-slate-500">{csiCount.toLocaleString("th-TH")} observations · {csiImports.length} ไฟล์</p></div>
+            <div><h2 className="text-[16px] font-medium">ไฟล์ Excel จาก CSI</h2><p className="text-[13px] font-medium text-slate-500">{csiCount.toLocaleString("th-TH")} observations · {csiImports.length} ไฟล์</p></div>
           </div>
           {csiImports.length > 0 && <button className={clearClass} onClick={() => window.confirm("ลบข้อมูล CSI ทั้งหมดใช่หรือไม่?") && onClearCsi()}>ล้างทั้งหมด</button>}
         </div>
@@ -144,8 +144,8 @@ export default function Reports({
       <section className={blockClass}>
         <div className="mb-[11px] flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
-            <span className="grid size-9 place-items-center rounded-lg bg-sky-600 text-[7px] font-extrabold text-white">FORM</span>
-            <div><h2 className="text-[11px] font-bold">ข้อมูลจากแบบประเมิน</h2><p className="mt-0.5 text-[8px] text-slate-500">{savedCount.toLocaleString("th-TH")} รายการ</p></div>
+            <span className="grid size-[38px] place-items-center rounded-lg bg-sky-600 text-[11px] font-semibold text-white">FORM</span>
+            <div><h2 className="text-[16px] font-medium">ข้อมูลจากแบบประเมิน</h2><p className="text-[13px] text-slate-500">{savedCount.toLocaleString("th-TH")} รายการ</p></div>
           </div>
           {savedCount > 0 && <button className={clearClass} onClick={() => window.confirm("ลบแบบประเมินทั้งหมดใช่หรือไม่?") && onClearSaved()}>ล้างทั้งหมด</button>}
         </div>
