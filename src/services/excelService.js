@@ -58,13 +58,19 @@ function excelCellValue(cell) {
   return "";
 }
 
+function daysInImportMonth(importMonth) {
+  const [year, month] = String(importMonth).split("-").map(Number);
+  if (!year || !month) return 31;
+  return new Date(year, month, 0).getDate();
+}
+
 function normalizeImportedDate(value, importMonth) {
   if (value instanceof Date && !Number.isNaN(value.valueOf())) {
     return value.toISOString().slice(0, 10);
   }
   const text = clean(value);
   const day = Number(text);
-  if (Number.isInteger(day) && day >= 1 && day <= 31) {
+  if (Number.isInteger(day) && day >= 1 && day <= daysInImportMonth(importMonth)) {
     return `${importMonth}-${String(day).padStart(2, "0")}`;
   }
   if (/^\d{4}-\d{2}-\d{2}$/.test(text)) return text;

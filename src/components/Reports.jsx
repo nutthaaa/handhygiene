@@ -118,8 +118,8 @@ export default function Reports({
       <section className={blockClass}>
         <div className="mb-[11px] flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
-            <span className="grid size-[38px] place-items-center rounded-lg bg-emerald-600 text-[12px] font-semibold text-white">CSI</span>
-            <div><h2 className="text-[14px] font-semibold">ไฟล์ Excel จาก CSI</h2><p className="mt-0.5 text-[12px] font-semibold text-slate-500">{csiCount.toLocaleString("th-TH")} observations · {csiImports.length} ไฟล์</p></div>
+            <span className="grid size-[38px] place-items-center rounded-lg bg-emerald-600 text-[13px] font-semibold text-white">CSI</span>
+            <div><h2 className="text-[16px] font-semibold">ไฟล์ Excel จาก CSI</h2><p className="mt-0.5 text-[12px] font-semibold text-slate-500">{csiCount.toLocaleString("th-TH")} observations · {csiImports.length} ไฟล์</p></div>
           </div>
           {csiImports.length > 0 && <button className={clearClass} onClick={() => window.confirm("ลบข้อมูล CSI ทั้งหมดใช่หรือไม่?") && onClearCsi()}>ล้างทั้งหมด</button>}
         </div>
