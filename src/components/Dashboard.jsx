@@ -388,9 +388,9 @@ const WEEKDAY_COLUMNS = ["จันทร์", "อังคาร", "พุธ"
 const HEATMAP_VISIBLE_ROWS = 5; // จำนวนเดือนที่แสดงก่อนเริ่มเลื่อน
 const HEATMAP_ROW_HEIGHT = 40; // ความสูงของแต่ละแถวเดือน
 const HEATMAP_COLORS = {
-  under75: "bg-[#F87171]/80",
+  under75: "bg-[#F87171]/75",
   from75To84: "bg-[#F6B23B]/90",
-  from85To89: "bg-[#FACC5A]/85",
+  from85To89: "bg-[#FACC5A]/80",
   from90Up: "bg-[#83C45A]/90",
 };
 
