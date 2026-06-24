@@ -1,113 +1,89 @@
-import { useEffect, useMemo, useState } from "react";
-import { CSI_STORAGE_KEY, DEFAULT_HEADERS, STORAGE_KEY, SURVEY_OPTIONS } from "../data/constants.js";
-import { readCsiExcel } from "../services/excelService.js";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { DEFAULT_HEADERS, SURVEY_OPTIONS } from "../data/constants.js";
+import {
+  clearCsiImports,
+  clearFormObservations,
+  createObservation,
+  deleteCsiMonth,
+  deleteObservation,
+  fetchCsiImports,
+  fetchObservations,
+  importCsiFile,
+} from "../services/api.js";
 
-function loadSavedRecords() {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-  } catch {
-    return [];
-  }
-}
-
-function loadCsiRecords() {
-  try {
-    return JSON.parse(localStorage.getItem(CSI_STORAGE_KEY) || "[]");
-  } catch {
-    return [];
-  }
-}
+const isCsiRecord = (item) => item.source === "CSI" || item.source === "CSI Excel";
 
 export function useHandHygieneData() {
-  const [formRecords, setFormRecords] = useState(loadSavedRecords);
-  const [csiRecords, setCsiRecords] = useState(loadCsiRecords);
+  const [records, setRecords] = useState([]);
+  const [csiImports, setCsiImports] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  useEffect(() => {
-    const refreshRecords = () => {
-      setFormRecords(loadSavedRecords());
-      setCsiRecords(loadCsiRecords());
-    };
-    window.addEventListener("storage", refreshRecords);
-    window.addEventListener("focus", refreshRecords);
-    return () => {
-      window.removeEventListener("storage", refreshRecords);
-      window.removeEventListener("focus", refreshRecords);
-    };
+  const refresh = useCallback(async () => {
+    try {
+      const [allRecords, imports] = await Promise.all([
+        fetchObservations(),
+        fetchCsiImports(),
+      ]);
+      setRecords(allRecords);
+      setCsiImports(imports);
+      setError("");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  const records = useMemo(() => [...formRecords, ...csiRecords], [formRecords, csiRecords]);
+  useEffect(() => {
+    refresh();
+    window.addEventListener("focus", refresh);
+    return () => window.removeEventListener("focus", refresh);
+  }, [refresh]);
+
+  const formRecords = useMemo(() => records.filter((item) => !isCsiRecord(item)), [records]);
+  const csiRecords = useMemo(() => records.filter(isCsiRecord), [records]);
   const dashboardOptions = useMemo(() => ({
     department: [...new Set(records.map((item) => item.department))].filter(Boolean).sort(),
     profession: [...new Set(formRecords.map((item) => item.profession))].filter(Boolean).sort(),
   }), [records, formRecords]);
 
-  function addRecord(form) {
-    const normalize = (value) => String(value || "").replace(/\s+/g, " ").trim();
-    const record = {
-      ...Object.fromEntries(Object.entries(form).map(([key, value]) => [key, normalize(value)])),
-      id: `local:${crypto.randomUUID()}`,
-      source: "แบบประเมินออนไลน์",
-      createdAt: new Date().toISOString(),
-    };
-    const next = [...formRecords, record];
-    setFormRecords(next);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+  async function addRecord(form) {
+    await createObservation(form);
+    await refresh();
   }
 
-  function clearSavedRecords() {
-    setFormRecords([]);
-    localStorage.removeItem(STORAGE_KEY);
+  async function clearSavedRecords() {
+    await clearFormObservations();
+    await refresh();
   }
 
-  function removeFormRecord(recordId) {
-    const next = formRecords.filter((item) => item.id !== recordId);
-    setFormRecords(next);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+  async function removeFormRecord(recordId) {
+    await deleteObservation(recordId);
+    await refresh();
   }
 
   async function importCsi(file, importMonth) {
-    const imported = await readCsiExcel(file, importMonth);
-    const next = [...csiRecords.filter((item) => item.csiMonth !== importMonth), ...imported];
-    setCsiRecords(next);
-    localStorage.setItem(CSI_STORAGE_KEY, JSON.stringify(next));
-    return imported.length;
+    const { count } = await importCsiFile(file, importMonth);
+    await refresh();
+    return count;
   }
 
-  function clearCsiRecords() {
-    setCsiRecords([]);
-    localStorage.removeItem(CSI_STORAGE_KEY);
+  async function clearCsiRecords() {
+    await clearCsiImports();
+    await refresh();
   }
 
-  function removeCsiImport(importMonth) {
-    const next = csiRecords.filter((item) => item.csiMonth !== importMonth);
-    setCsiRecords(next);
-    localStorage.setItem(CSI_STORAGE_KEY, JSON.stringify(next));
+  async function removeCsiImport(importMonth) {
+    await deleteCsiMonth(importMonth);
+    await refresh();
   }
-
-  const csiImports = useMemo(() => {
-    const grouped = csiRecords.reduce((result, record) => {
-      const key = record.csiMonth;
-      if (!result[key]) {
-        result[key] = {
-          month: key,
-          fileName: record.csiFile || "CSI.xlsx",
-          importedAt: record.importedAt || null,
-          count: 0,
-          departments: new Set(),
-        };
-      }
-      result[key].count += 1;
-      result[key].departments.add(record.department);
-      return result;
-    }, {});
-    return Object.values(grouped)
-      .map((item) => ({ ...item, departments: item.departments.size }))
-      .sort((a, b) => b.month.localeCompare(a.month));
-  }, [csiRecords]);
 
   return {
     records,
     formRecords,
+    loading,
+    error,
     headers: DEFAULT_HEADERS,
     surveyOptions: { department: [], ...SURVEY_OPTIONS },
     dashboardOptions,

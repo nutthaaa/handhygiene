@@ -72,6 +72,8 @@ export default function SurveyForm({ headers, options, onSave }) {
   const [form, setForm] = useState(createInitialForm);
   const [otherDetails, setOtherDetails] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [saveError, setSaveError] = useState("");
+  const [saving, setSaving] = useState(false);
   const fields = useMemo(() => [
     { name: "date", label: headers[0], type: "date" },
     { name: "department", label: headers[1], options: options.department },
@@ -85,7 +87,7 @@ export default function SurveyForm({ headers, options, onSave }) {
     setForm((current) => ({ ...current, [event.target.name]: event.target.value }));
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
     const submittedForm = Object.fromEntries(
       Object.entries(form).map(([key, value]) => [
@@ -95,11 +97,19 @@ export default function SurveyForm({ headers, options, onSave }) {
           : value,
       ]),
     );
-    onSave(submittedForm);
-    setSubmitted(true);
-    setForm(createInitialForm());
-    setOtherDetails({});
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    setSaving(true);
+    setSaveError("");
+    try {
+      await onSave(submittedForm);
+      setSubmitted(true);
+      setForm(createInitialForm());
+      setOtherDetails({});
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (error) {
+      setSaveError(error.message || "บันทึกข้อมูลไม่สำเร็จ");
+    } finally {
+      setSaving(false);
+    }
   }
 
   function handleOtherChange(fieldName, value) {
@@ -167,9 +177,15 @@ export default function SurveyForm({ headers, options, onSave }) {
             </section>
           ))}
 
+          {saveError && (
+            <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-2.5 text-[10px] text-red-700">
+              บันทึกไม่สำเร็จ: {saveError}
+            </div>
+          )}
+
           <div className="sticky bottom-3 mt-1 flex items-center justify-between gap-5 rounded-[13px] border border-slate-200 bg-white/95 px-4 py-3.5 shadow-[0_12px_34px_rgba(25,68,98,.14)] backdrop-blur-xl max-[720px]:bottom-[calc(7px+env(safe-area-inset-bottom))] max-[720px]:rounded-[11px] max-[720px]:p-2.5">
             <div className="max-[720px]:hidden"><b className="block text-[11px]">ตรวจสอบคำตอบก่อนส่ง</b><span className="mt-0.5 block text-[9px] text-slate-500">ข้อมูลจะถูกส่งเข้าสู่ Dashboard ทันที</span></div>
-            <button className="min-w-[180px] rounded-[10px] bg-gradient-to-r from-sky-900 to-sky-600 px-6 py-3 font-bold text-white max-[720px]:min-h-12 max-[720px]:w-full max-[720px]:min-w-0" type="submit">ส่งแบบประเมิน</button>
+            <button className="min-w-[180px] rounded-[10px] bg-gradient-to-r from-sky-900 to-sky-600 px-6 py-3 font-bold text-white disabled:opacity-60 max-[720px]:min-h-12 max-[720px]:w-full max-[720px]:min-w-0" type="submit" disabled={saving}>{saving ? "กำลังบันทึก..." : "ส่งแบบประเมิน"}</button>
           </div>
         </form>
       </main>
