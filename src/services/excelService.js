@@ -1,6 +1,11 @@
 import ExcelJS from "exceljs";
 import { MONTH_NAMES } from "../data/constants.js";
 
+const NO_HAND_HYGIENE = "ไม่ทำความสะอาดมือ";
+const NO_MOMENT_DATA = "ไม่มีข้อมูล Moment";
+const NO_COMPLETE_DATA = "ไม่มีข้อมูลครบ 6 ขั้นตอน";
+const UNKNOWN = "ไม่ระบุ";
+
 const clean = (value) => String(value ?? "").replace(/\s+/g, " ").trim();
 const unique = (items) => [...new Set(items.filter(Boolean))].sort((a, b) => a.localeCompare(b, "th"));
 
@@ -10,7 +15,7 @@ export function calculateRate(records) {
     item.method.startsWith("H1") || item.method.startsWith("H2"),
   ).length;
   const complete = records.filter((item) => item.result.startsWith("ครบ")).length;
-  const completeDenominator = records.filter((item) => item.result !== "ไม่มีข้อมูลครบ 6 ขั้นตอน").length;
+  const completeDenominator = records.filter((item) => item.result !== NO_COMPLETE_DATA).length;
   return {
     denominator,
     compliant,
@@ -34,7 +39,6 @@ export function calculateExcelSummaries(records) {
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([key, rows]) => ({ key, label: monthLabel(key), ...calculateRate(rows) }));
 
-  // Mirrors the YTD workbook: SUM(monthly numerators) / SUM(monthly denominators) × 100.
   const ytd = monthly.reduce((total, month) => ({
     denominator: total.denominator + month.denominator,
     compliant: total.compliant + month.compliant,
@@ -79,10 +83,10 @@ function normalizeImportedDate(value, importMonth) {
 
 function isObservationHeader(row) {
   const headers = Array.from({ length: 6 }, (_, index) => clean(excelCellValue(row.getCell(index + 1))));
-  return headers[0].includes("วันที่สังเกต")
-    && (headers[1].includes("แผนก") || headers[1].includes("สังเกตการทำความสะอาดมือ"))
+  return (headers[0].includes("วันที่สังเกต") || headers[0].includes("วัน/เดือน/ปี") || /date/i.test(headers[0]))
+    && (headers[1].includes("แผนก") || headers[1].includes("สังเกตการทำความสะอาดมือ") || /department|unit|ward/i.test(headers[1]))
     && headers[3].includes("Moment")
-    && headers[4].includes("วิธีการทำความสะอาดมือ");
+    && (headers[4].includes("วิธีการทำความสะอาดมือ") || /hand hygiene action|method/i.test(headers[4]));
 }
 
 function readRawObservationSheets(workbook, file, importMonth, importedAt) {
@@ -100,18 +104,17 @@ function readRawObservationSheets(workbook, file, importMonth, importedAt) {
       const result = clean(excelCellValue(row.getCell(6)));
 
       const validMoment = /^M\s*[1-5]\b/i.test(moment);
-      const validMethod = /^H\s*[12]\b/i.test(method) || method.includes("ไม่ทำความสะอาดมือ");
+      const validMethod = /^H\s*[12]\b/i.test(method) || method.includes(NO_HAND_HYGIENE);
       if (!department || !validMoment || !validMethod) continue;
 
-      const date = normalizeImportedDate(excelCellValue(row.getCell(1)), importMonth);
       rows.push({
         id: `csi:${importMonth}:${sheet.name}:${rowNumber}`,
-        date,
+        date: normalizeImportedDate(excelCellValue(row.getCell(1)), importMonth),
         department,
-        profession: profession || "ไม่ระบุ",
+        profession: profession || UNKNOWN,
         moment,
         method,
-        result: result || (method.includes("ไม่ทำความสะอาดมือ") ? "ไม่ทำความสะอาดมือ" : "ไม่ระบุ"),
+        result: result || (method.includes(NO_HAND_HYGIENE) ? NO_HAND_HYGIENE : UNKNOWN),
         source: "CSI Excel",
         csiMonth: importMonth,
         csiFile: file.name,
@@ -122,9 +125,6 @@ function readRawObservationSheets(workbook, file, importMonth, importedAt) {
     if (rows.length) candidates.push({ sheetName: sheet.name, records: rows });
   });
 
-  // Workbooks contain the same observations repeated in filtered sheets
-  // (by profession and department). The largest raw-data sheet is the master
-  // dataset, e.g. "May"; importing all sheets would double-count observations.
   candidates.sort((a, b) => b.records.length - a.records.length);
   return candidates[0]?.records || [];
 }
@@ -139,8 +139,6 @@ export async function readCsiExcel(file, importMonth) {
   await workbook.xlsx.load(await file.arrayBuffer());
   const importedAt = new Date().toISOString();
 
-  // Prefer detailed observation rows. The monthly workbook also contains CSI
-  // summaries calculated from these rows, so importing both would double-count.
   const detailedRecords = readRawObservationSheets(workbook, file, importMonth, importedAt);
   if (detailedRecords.length) return detailedRecords;
 
@@ -169,9 +167,9 @@ export async function readCsiExcel(file, importMonth) {
         date: `${importMonth}-01`,
         department,
         profession: "CSI Aggregate",
-        moment: "ไม่มีข้อมูล Moment",
-        method: compliant ? "H1/H2 จากข้อมูล CSI" : "ไม่ทำความสะอาดมือ",
-        result: "ไม่มีข้อมูลครบ 6 ขั้นตอน",
+        moment: NO_MOMENT_DATA,
+        method: compliant ? "H1/H2 จากข้อมูล CSI" : NO_HAND_HYGIENE,
+        result: NO_COMPLETE_DATA,
         source: "CSI",
         csiMonth: importMonth,
         csiFile: file.name,

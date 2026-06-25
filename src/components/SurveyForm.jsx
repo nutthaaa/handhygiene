@@ -112,27 +112,25 @@ export default function SurveyForm({ headers, options, onSave }) {
   return (
     <div className="min-h-screen min-w-0 bg-slate-50 font-['Noto_Sans_Thai','Leelawadee_UI',Tahoma,sans-serif] text-slate-800 max-[720px]:pb-[env(safe-area-inset-bottom)] [&_*]:min-w-0">
       <header className="sticky top-0 z-10 m-0 min-h-[68px] border-b border-slate-200 bg-white/95 backdrop-blur-xl max-[720px]:min-h-[60px]">
-        <div className="mx-auto flex min-h-[68px] w-[min(calc(100%-32px),1040px)] items-center justify-between gap-5 max-[900px]:w-[min(calc(100%-28px),760px)] max-[720px]:min-h-[60px] max-[720px]:w-[min(calc(100%-20px),1040px)]">
-          <a className="flex items-center gap-2.5 text-sky-900 no-underline" href="/survey">
-            <span className="text-teal-500"><Icon name="hand" size={33} /></span>
-            <span>
-              <strong className="block text-[20px] leading-[1.1] max-[430px]:text-[15px]">CleanHands+</strong>
-              <small className="mt-0.5 block text-[12px] text-slate-500 max-[430px]:hidden">Observation Form</small>
+        <div className="mx-auto flex min-h-[68px] w-[min(calc(100%-32px),1040px)] items-center justify-between gap-4 max-[900px]:w-[min(calc(100%-28px),760px)] max-[720px]:min-h-[60px] max-[720px]:w-[min(calc(100%-20px),1040px)] max-[430px]:gap-2">
+          <a className="flex min-w-0 items-center gap-2.5 text-sky-900 no-underline" href="/survey">
+            <span className="shrink-0 text-teal-500"><Icon name="hand" size={33} /></span>
+            <span className="min-w-0">
+              <strong className="block truncate text-[20px] leading-[1.1] max-[430px]:text-[15px]">CleanHands+</strong>
+              <small className="mt-0.5 block truncate text-[12px] text-slate-500 max-[430px]:hidden">Observation Form</small>
             </span>
           </a>
-          <img className="h-[37px] w-auto shrink-0 object-contain" src="/bangkok-hospital-logo-navy-trim.png" alt="Bangkok Hospital" />
+          <img className="h-[37px] w-auto shrink-0 object-contain max-[430px]:h-8" src="/bangkok-hospital-logo-navy-trim.png" alt="Bangkok Hospital" />
         </div>
       </header>
 
       <main className="mx-auto w-[min(calc(100%-32px),1040px)] py-[18px] max-[900px]:w-[min(calc(100%-28px),760px)] max-[720px]:w-[min(calc(100%-20px),1040px)] max-[720px]:py-6">
-        <section className="mb-6 flex items-center justify-between gap-[25px] max-[720px]:items-start max-[430px]:block max-[430px]:mb-[18px]">
-          <div className="w-full">
-            <h1 className="my-2 text-[clamp(24px,4vw,34px)] font-bold max-[430px]:text-[23px]">แบบประเมินการทำความสะอาดมือ</h1>
-            <p className="text-[14px] -mt-2 font-extrabold tracking-[1.3px] text-slate-600">HAND HYGIENE OBSERVATION</p>
-            <div className="mt-1 flex items-center justify-between gap-5 max-[720px]:items-start max-[520px]:flex-col max-[520px]:gap-3">
-              <p className="m-0 text-sm leading-[1.8] text-slate-500 max-[430px]:text-[11px] max-[430px]:leading-[1.65]">เลือกคำตอบแล้วกดส่งข้อมูล ผลจะถูกนำไปคำนวณในระบบ Dashboard อัตโนมัติ</p>
-              <a className="shrink-0 rounded-[9px] border border-slate-300 bg-white px-[13px] py-2 text-[12px] font-semibold text-sky-900 no-underline max-[430px]:px-[9px] max-[430px]:py-[7px] max-[430px]:text-[11px] hover:bg-sky-800 hover:text-white" href="/">ดู Dashboard</a>
-            </div>
+        <section className="mb-6 max-[430px]:mb-[18px]">
+          <h1 className="my-2 text-[clamp(24px,4vw,34px)] font-bold max-[430px]:text-[23px]">แบบประเมินการทำความสะอาดมือ</h1>
+          <p className="-mt-2 text-[14px] font-extrabold tracking-[1.3px] text-slate-600">HAND HYGIENE OBSERVATION</p>
+          <div className="mt-1 flex items-center justify-between gap-5 max-[720px]:items-start max-[520px]:flex-col max-[520px]:gap-3">
+            <p className="m-0 text-sm leading-[1.8] text-slate-500 max-[430px]:text-[11px] max-[430px]:leading-[1.65]">เลือกคำตอบแล้วกดส่งข้อมูล ผลจะถูกนำไปคำนวณในระบบ Dashboard อัตโนมัติ</p>
+            <a className="shrink-0 rounded-[9px] border border-slate-300 bg-white px-[13px] py-2 text-[12px] font-semibold text-sky-900 no-underline hover:bg-sky-800 hover:text-white max-[430px]:px-[9px] max-[430px]:py-[7px] max-[430px]:text-[11px]" href="/">ดู Dashboard</a>
           </div>
         </section>
 
@@ -161,14 +159,18 @@ export default function SurveyForm({ headers, options, onSave }) {
           ))}
 
           <div className="sticky bottom-3 mt-1 flex items-center justify-between gap-5 rounded-[13px] border border-slate-200 bg-white/95 px-4 py-3.5 shadow-[0_12px_34px_rgba(25,68,98,.14)] backdrop-blur-xl max-[720px]:bottom-[calc(7px+env(safe-area-inset-bottom))] max-[720px]:rounded-[11px] max-[720px]:p-2.5">
-            <div className="max-[720px]:hidden"><b className="block text-[14px] font-semibold">ตรวจสอบคำตอบก่อนส่ง</b><span className="mt-0.5 block text-[12px] text-slate-500">ข้อมูลจะถูกส่งเข้าสู่ Dashboard ทันที</span></div>
-            <button className="min-w-[180px] rounded-[10px] border border-slate-100 bg-white px-6 py-3 text-[15px] font-semibold text-slate-700 max-[720px]:min-h-12 max-[720px]:w-full max-[720px]:min-w-0 hover:bg-sky-800 hover:text-white cursor-pointer" type="submit">ส่งแบบประเมิน</button>
+            <div className="max-[720px]:hidden">
+              <b className="block text-[14px] font-semibold">ตรวจสอบคำตอบก่อนส่ง</b>
+              <span className="mt-0.5 block text-[12px] text-slate-500">ข้อมูลจะถูกส่งเข้าสู่ Dashboard ทันที</span>
+            </div>
+            <button className="min-w-[180px] cursor-pointer rounded-[10px] border border-slate-100 bg-white px-6 py-3 text-[15px] font-semibold text-slate-700 hover:bg-sky-800 hover:text-white max-[720px]:min-h-12 max-[720px]:w-full max-[720px]:min-w-0" type="submit">ส่งแบบประเมิน</button>
           </div>
         </form>
       </main>
+
       {submitted && (
         <div className="fixed inset-0 z-50 grid place-items-center bg-slate-950/50 p-5 backdrop-blur-[2px]" role="presentation">
-          <section className="flex w-full max-w-[460px] flex-col items-center rounded-2xl bg-white px-7 py-8 text-center text-slate-900 shadow-2xl">
+          <section className="flex w-full max-w-[460px] flex-col items-center rounded-2xl bg-white px-7 py-8 text-center text-slate-900 shadow-2xl max-[430px]:px-5">
             <div className="grid size-14 place-items-center rounded-full bg-green-500/70">
               <img className="h-12 w-12 object-contain" src="/check-svgrepo-com.svg" alt="" aria-hidden="true" />
             </div>
@@ -176,13 +178,13 @@ export default function SurveyForm({ headers, options, onSave }) {
             <p className="mt-2 max-w-[340px] text-sm leading-6 text-slate-700">สามารถทำแบบประเมินรายการถัดไป หรือเปิด Dashboard เพื่อตรวจสอบผล</p>
             <div className="mt-6 flex w-full flex-wrap justify-center gap-2">
               <button
-                className="min-w-[145px] rounded-[10px] border border-slate-100 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-emerald-50 hover:border-emerald-700 hover:text-emerald-700 cursor-pointer"
+                className="min-w-[145px] cursor-pointer rounded-[10px] border border-slate-100 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-emerald-700 hover:bg-emerald-50 hover:text-emerald-700"
                 type="button"
                 onClick={() => setSubmitted(false)}
               >
                 ทำแบบประเมินต่อ
               </button>
-              <a className="min-w-[145px] rounded-[10px] border border-slate-100 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 no-underline transition hover:bg-sky-50 hover:border-sky-800 hover:text-sky-800 cursor-pointer" href="/">เปิด Dashboard</a>
+              <a className="min-w-[145px] cursor-pointer rounded-[10px] border border-slate-100 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 no-underline transition hover:border-sky-800 hover:bg-sky-50 hover:text-sky-800" href="/">เปิด Dashboard</a>
             </div>
           </section>
         </div>

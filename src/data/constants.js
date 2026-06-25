@@ -9,7 +9,7 @@ export const MONTH_NAMES = [
 export const MOMENTS = [
   { code: "M1", label: "ก่อนสัมผัสผู้ป่วย", color: "#2f9e9f" },
   { code: "M2", label: "ก่อนทำหัตถการ", color: "#58b7d5" },
-  { code: "M3", label: "หลังสัมผัสสารคัดหลั่ง", color: "#f2b456" },
+  { code: "M3", label: "หลังสัมผัสเลือดและสารคัดหลั่ง", color: "#f2b456" },
   { code: "M4", label: "หลังสัมผัสผู้ป่วย", color: "#ef865d" },
   { code: "M5", label: "หลังสัมผัสสิ่งแวดล้อม", color: "#7d77c8" },
 ];
@@ -20,7 +20,7 @@ export const DEFAULT_HEADERS = [
   "ตำแหน่ง (HCWs type)",
   "ข้อบ่งชี้การทำความสะอาดมือ (Indications)",
   "วิธีการทำความสะอาดมือ (Hand Hygiene action)",
-  "การทำความสะอาดมือ 6 ขั้นตอน (Hand Hygiene complete)",
+  "การทำความสะอาดมือครบ 6 ขั้นตอน (Hand Hygiene complete)",
 ];
 
 export const SURVEY_OPTIONS = {
@@ -31,7 +31,7 @@ export const SURVEY_OPTIONS = {
     "กายภาพบำบัด",
     "เภสัชกร/ผู้ช่วยเภสัชกร",
     "แม่บ้าน",
-    "นักโภชนากร",
+    "นักโภชนาการ",
     "เจ้าหน้าที่เสิร์ฟ/บริการอาหาร",
     "เจ้าหน้าที่เคลื่อนย้ายผู้ป่วย",
     "เจ้าหน้าที่เทคนิค",

@@ -1,6 +1,18 @@
 import { useState } from "react";
 import { monthLabel } from "../services/excelService.js";
 
+function repairMojibake(value) {
+  const text = String(value ?? "");
+  if (!/[àÃÂ]/.test(text)) return text;
+  try {
+    const bytes = Uint8Array.from([...text].map((char) => char.charCodeAt(0) & 0xff));
+    const decoded = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+    return decoded.includes("\uFFFD") ? text : decoded;
+  } catch {
+    return text;
+  }
+}
+
 function formatDate(value, withTime = false) {
   if (!value) return "ไม่ระบุ";
   const date = new Date(value);
@@ -14,8 +26,9 @@ function formatDate(value, withTime = false) {
 function DetailModal({ detail, onClose }) {
   if (!detail) return null;
   const isCsi = detail.type === "csi";
+  const fileName = repairMojibake(detail.item.fileName);
   const rows = isCsi ? [
-    ["ชื่อไฟล์", detail.item.fileName],
+    ["ชื่อไฟล์", fileName],
     ["เดือนข้อมูล", monthLabel(detail.item.month)],
     ["วันที่นำเข้า", formatDate(detail.item.importedAt, true)],
     ["จำนวนแผนก", `${detail.item.departments} แผนก`],
@@ -34,17 +47,17 @@ function DetailModal({ detail, onClose }) {
     <div className="fixed inset-0 z-50 grid place-items-center bg-slate-950/50 p-5 backdrop-blur-[3px]" role="presentation" onClick={onClose}>
       <section className="max-h-[calc(100vh-40px)] w-full max-w-[560px] overflow-y-auto rounded-[14px] bg-white p-[18px] shadow-2xl" role="dialog" aria-modal="true" onClick={(event) => event.stopPropagation()}>
         <div className="flex justify-between gap-[15px] border-b border-slate-200 pb-3">
-          <div>
-            <small className="text-[13px] mb-1 font-extrabold tracking-[1px] text-slate-700">{isCsi ? "CSI IMPORT" : "OBSERVATION FORM"}</small>
-            <h2 className="mt-[3px] text-sm font-semibold mt-1">{isCsi ? detail.item.fileName : detail.item.department}</h2>
+          <div className="min-w-0">
+            <small className="mb-1 text-[13px] font-extrabold tracking-[1px] text-slate-700">{isCsi ? "CSI IMPORT" : "OBSERVATION FORM"}</small>
+            <h2 className="mt-1 overflow-hidden text-ellipsis whitespace-nowrap text-sm font-semibold">{isCsi ? fileName : detail.item.department}</h2>
           </div>
           <button className="grid size-[30px] cursor-pointer place-items-center rounded-full bg-slate-50 text-xl text-slate-600" onClick={onClose} aria-label="ปิด">×</button>
         </div>
         <dl className="grid">
           {rows.map(([label, value]) => (
             <div className="grid grid-cols-[145px_1fr] gap-2 border-b border-slate-100 px-[3px] py-[9px] max-[720px]:grid-cols-1 max-[720px]:gap-[3px]" key={label}>
-              <dt className="text-[13px] font-semibold text-slate-700 p-1">{label}</dt>
-              <dd className="m-0 text-[13px] p-1 leading-6 text-slate-700">{value || "ไม่ระบุ"}</dd>
+              <dt className="p-1 text-[13px] font-semibold text-slate-700">{label}</dt>
+              <dd className="m-0 p-1 text-[13px] leading-6 text-slate-700">{value || "ไม่ระบุ"}</dd>
             </div>
           ))}
         </dl>
@@ -89,7 +102,8 @@ export default function Reports({
   const [detail, setDetail] = useState(null);
 
   function removeImport(item) {
-    if (window.confirm(`ลบไฟล์ ${item.fileName} เดือน ${monthLabel(item.month)} ใช่หรือไม่?`)) {
+    const fileName = repairMojibake(item.fileName);
+    if (window.confirm(`ลบไฟล์ ${fileName} เดือน ${monthLabel(item.month)} ใช่หรือไม่?`)) {
       onRemoveCsiImport(item.month);
       setDetail(null);
     }
@@ -120,24 +134,30 @@ export default function Reports({
         <div className="mb-[11px] flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
             <span className="grid size-[38px] place-items-center rounded-lg bg-emerald-600 text-[13px] font-semibold text-white">CSI</span>
-            <div><h2 className="text-[16px] font-medium">ไฟล์ Excel จาก CSI</h2><p className="text-[13px] font-medium text-slate-500">{csiCount.toLocaleString("th-TH")} observations · {csiImports.length} ไฟล์</p></div>
+            <div>
+              <h2 className="text-[16px] font-medium">ไฟล์ Excel จาก CSI</h2>
+              <p className="text-[13px] font-medium text-slate-500">{csiCount.toLocaleString("th-TH")} observations · {csiImports.length} ไฟล์</p>
+            </div>
           </div>
           {csiImports.length > 0 && <button className={clearClass} onClick={() => window.confirm("ลบข้อมูล CSI ทั้งหมดใช่หรือไม่?") && onClearCsi()}>ล้างทั้งหมด</button>}
         </div>
         {csiImports.length === 0 ? <div className={emptyClass}>ยังไม่มีไฟล์ Excel จาก CSI</div> : (
           <div className="grid gap-[7px]">
-            {csiImports.map((item) => (
-              <ReportRecord
-                key={item.month}
-                hideBadge
-                title={item.fileName}
-                subtitle={`เดือนข้อมูล ${monthLabel(item.month)} · นำเข้า ${formatDate(item.importedAt, true)}`}
-                stat={item.count.toLocaleString("th-TH")}
-                statLabel="observations"
-                onDetail={() => setDetail({ type: "csi", item })}
-                onDelete={() => removeImport(item)}
-              />
-            ))}
+            {csiImports.map((item) => {
+              const fileName = repairMojibake(item.fileName);
+              return (
+                <ReportRecord
+                  key={item.month}
+                  hideBadge
+                  title={fileName}
+                  subtitle={`เดือนข้อมูล ${monthLabel(item.month)} · นำเข้า ${formatDate(item.importedAt, true)}`}
+                  stat={item.count.toLocaleString("th-TH")}
+                  statLabel="observations"
+                  onDetail={() => setDetail({ type: "csi", item: { ...item, fileName } })}
+                  onDelete={() => removeImport({ ...item, fileName })}
+                />
+              );
+            })}
           </div>
         )}
       </section>
@@ -146,7 +166,10 @@ export default function Reports({
         <div className="mb-[11px] flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
             <span className="grid size-[38px] place-items-center rounded-lg bg-sky-600 text-[11px] font-semibold text-white">FORM</span>
-            <div><h2 className="text-[16px] font-medium">ข้อมูลจากแบบประเมิน</h2><p className="text-[13px] text-slate-500">{savedCount.toLocaleString("th-TH")} รายการ</p></div>
+            <div>
+              <h2 className="text-[16px] font-medium">ข้อมูลจากแบบประเมิน</h2>
+              <p className="text-[13px] text-slate-500">{savedCount.toLocaleString("th-TH")} รายการ</p>
+            </div>
           </div>
           {savedCount > 0 && <button className={clearClass} onClick={() => window.confirm("ลบแบบประเมินทั้งหมดใช่หรือไม่?") && onClearSaved()}>ล้างทั้งหมด</button>}
         </div>
@@ -158,7 +181,7 @@ export default function Reports({
                 hideBadge
                 title={item.department}
                 subtitle={`${formatDate(item.date)} · ${item.profession}`}
-                stat={item.moment?.match(/M[1-5]/)?.[0] || "—"}
+                stat={item.moment?.match(/M[1-5]/)?.[0] || "-"}
                 statLabel="Moment"
                 onDetail={() => setDetail({ type: "form", item })}
                 onDelete={() => removeForm(item)}
