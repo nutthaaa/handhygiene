@@ -137,7 +137,7 @@ export default function SurveyForm({ headers, options, onSave }) {
         <form className="grid gap-3.5" onSubmit={handleSubmit}>
           <section className={questionClass}>
             <QuestionHeader number="1" title={fields[0].label} description="เลือกวันที่ทำการสังเกต" />
-            <input className={`ml-[43px] w-[min(100%,320px)] max-[720px]:ml-0 max-[720px]:w-full ${inputClass}`} type="date" name="date" value={form.date} onChange={handleChange} required />
+            <input className={`ml-[43px] box-border w-[min(100%,320px)] min-w-0 max-w-full appearance-none max-[720px]:ml-0 max-[720px]:w-full ${inputClass}`} type="date" name="date" value={form.date} onChange={handleChange} required />
           </section>
 
           {fields.slice(1).map((field, index) => (

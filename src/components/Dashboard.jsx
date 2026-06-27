@@ -159,14 +159,14 @@ function KpiCard({ label, value, note, tone, icon }) {
   const colors = KPI_COLORS[tone];
   const KpiIcon = icon;
   return (
-    <article className={`relative flex min-h-[87px] items-center gap-2.5 overflow-hidden rounded-[13px] border p-[13px] shadow-[0_8px_25px_rgba(26,68,98,.08)] ${colors.cardBg} ${colors.card}`}>
-      <span className={`grid size-12 shrink-0 place-items-center rounded-full border font-extrabold ${colors.iconBox} ${colors.iconBorder}`}>
+    <article className={`relative flex min-h-[87px] items-center gap-2.5 overflow-hidden rounded-[13px] border p-[13px] shadow-[0_8px_25px_rgba(26,68,98,.08)] max-[430px]:gap-2 max-[430px]:p-2.5 ${colors.cardBg} ${colors.card}`}>
+      <span className={`grid size-12 shrink-0 place-items-center rounded-full border font-extrabold max-[430px]:size-10 ${colors.iconBox} ${colors.iconBorder}`}>
         <KpiIcon className={colors.icon} size={26} strokeWidth={2.2} aria-hidden="true" />
       </span>
-      <div>
-        <small className="block text-sm font-extrabold text-slate-700">{label}</small>
-        <strong className={`my-1 block text-[31px] leading-[1] ${colors.icon}`}>{value}</strong>
-        <em className="block text-[12px] not-italic font-semibold text-slate-600">{note}</em>
+      <div className="min-w-0">
+        <small className="block text-sm font-extrabold text-slate-700 max-[430px]:text-[12px]">{label}</small>
+        <strong className={`my-1 block text-[31px] leading-[1] [overflow-wrap:anywhere] max-[720px]:text-2xl max-[430px]:text-[21px] ${colors.icon}`}>{value}</strong>
+        <em className="block text-[12px] not-italic font-semibold text-slate-600 max-[430px]:text-[10px]">{note}</em>
       </div>
     </article>
   );
@@ -416,35 +416,39 @@ function MonthHeatmap({ data }) {
 
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <div className="grid min-w-[360px] grid-cols-[58px_repeat(7,minmax(38px,1fr))] gap-px pl-1.5 text-center text-[11px] font-bold">
-        <div className="bg-white py-1 text-left text-slate-600">เดือน</div>
-        {WEEKDAY_COLUMNS.map((day) => (
-          <div className="py-1 text-slate-600" key={day}>{day}</div>
-        ))}
-      </div>
-      <div
-        className={`min-h-0 pl-1.5 pr-1 [scrollbar-color:#cbd5e1_transparent] [scrollbar-width:thin] ${canScroll ? "overflow-auto" : "overflow-hidden"}`}
-        style={{ height: HEATMAP_ROW_HEIGHT * Math.min(data.length, HEATMAP_VISIBLE_ROWS) }}
-      >
-        <div
-          className="grid min-h-full min-w-[360px] grid-cols-[58px_repeat(7,minmax(38px,1fr))] gap-px text-center text-[11px] font-bold"
-          style={{ gridTemplateRows: `repeat(${data.length}, minmax(${HEATMAP_ROW_HEIGHT}px, 1fr))` }}
-        >
-          {data.map((row) => (
-            <div className="contents" key={row.key}>
-              <div className="sticky left-0 z-10 flex items-center bg-white py-2 pr-2 text-left text-[11px] font-bold text-slate-600">
-                {shortMonthLabel(row.key, row.label)}
-              </div>
-              {row.values.map((value, index) => (
-                <div
-                  className={`grid h-full min-h-[41px] place-items-center rounded-sm px-1 text-[12px] font-semibold text-slate-700 whitespace-nowrap ${heatmapCellClass(value)}`}
-                  key={`${row.key}-${index}`}
-                >
-                  {value == null || value <= 0 ? "–" : `${Math.round(value)}%`}
+      <div className="min-h-0 flex-1 overflow-x-auto pb-1 [scrollbar-color:#cbd5e1_transparent] [scrollbar-width:thin]">
+        <div className="flex h-full min-w-[360px] flex-col">
+          <div className="grid grid-cols-[58px_repeat(7,minmax(38px,1fr))] gap-px pl-1.5 text-center text-[11px] font-bold">
+            <div className="sticky left-0 z-10 bg-white py-1 text-left text-slate-600">เดือน</div>
+            {WEEKDAY_COLUMNS.map((day) => (
+              <div className="py-1 text-slate-600" key={day}>{day}</div>
+            ))}
+          </div>
+          <div
+            className={`min-h-0 pl-1.5 pr-1 [scrollbar-color:#cbd5e1_transparent] [scrollbar-width:thin] ${canScroll ? "overflow-y-auto" : "overflow-hidden"}`}
+            style={{ height: HEATMAP_ROW_HEIGHT * Math.min(data.length, HEATMAP_VISIBLE_ROWS) }}
+          >
+            <div
+              className="grid min-h-full grid-cols-[58px_repeat(7,minmax(38px,1fr))] gap-px text-center text-[11px] font-bold"
+              style={{ gridTemplateRows: `repeat(${data.length}, minmax(${HEATMAP_ROW_HEIGHT}px, 1fr))` }}
+            >
+              {data.map((row) => (
+                <div className="contents" key={row.key}>
+                  <div className="sticky left-0 z-10 flex items-center bg-white py-2 pr-2 text-left text-[11px] font-bold text-slate-600">
+                    {shortMonthLabel(row.key, row.label)}
+                  </div>
+                  {row.values.map((value, index) => (
+                    <div
+                      className={`grid h-full min-h-[41px] place-items-center rounded-sm px-1 text-[12px] font-semibold text-slate-700 whitespace-nowrap ${heatmapCellClass(value)}`}
+                      key={`${row.key}-${index}`}
+                    >
+                      {value == null || value <= 0 ? "–" : `${Math.round(value)}%`}
+                    </div>
+                  ))}
                 </div>
               ))}
             </div>
-          ))}
+          </div>
         </div>
       </div>
       <div className="mt-4 flex shrink-0 flex-wrap items-center justify-center gap-4 text-[11px] font-bold leading-none text-slate-600">
@@ -505,15 +509,22 @@ function ProfessionChart({ data }) {
         <span />
         <div className="relative h-8 border-t border-slate-300">
           {[0, 20, 40, 60, 80, 100].map((value) => (
-            <span className="absolute top-0" key={value} style={{ left: `${value}%` }}>
-              <i className="absolute left-0 top-0 h-1.5 w-px -translate-x-1/2 bg-slate-300" />
-              <b
-                className={`absolute top-2 whitespace-nowrap text-[11px] font-semibold text-slate-600 ${value === 0 ? "left-0" : value === 100 ? "right-0" : "left-0 -translate-x-1/2"
-                  }`}
-              >
-                {value}%
-              </b>
-            </span>
+            <i
+              key={value}
+              className="absolute top-0 h-1.5 w-px -translate-x-1/2 bg-slate-300"
+              style={{ left: `${value}%` }}
+              aria-hidden="true"
+            />
+          ))}
+          {[0, 50, 100].map((value) => (
+            <b
+              key={value}
+              className={`absolute top-2 whitespace-nowrap text-[11px] font-semibold text-slate-600 ${value === 0 ? "left-0" : value === 100 ? "right-0" : "-translate-x-1/2"
+                }`}
+              style={value === 0 || value === 100 ? undefined : { left: `${value}%` }}
+            >
+              {value}%
+            </b>
           ))}
         </div>
         <span />
@@ -696,7 +707,7 @@ export default function Dashboard({ records, options, savedCount, csiCount, onIm
       </header>
 
       <div className="mb-3 flex items-center justify-between gap-3 max-[900px]:items-start max-[720px]:flex-col">
-        <div className="flex cursor-pointer items-center gap-[9px] max-[720px]:w-full max-[720px]:flex-wrap">
+        <div className="flex cursor-pointer items-center gap-[9px] max-[720px]:w-full max-[720px]:flex-wrap max-[720px]:[&>label]:min-w-0 max-[720px]:[&>label]:flex-1 max-[720px]:[&_select]:max-w-none max-[720px]:[&_select]:min-w-0 max-[720px]:[&_select]:flex-1 max-[430px]:[&>label]:basis-full">
           <label className={fieldClass}>
             หน่วยงาน
             <select className={`${selectClass} cursor-pointer`} value={filters.department} onChange={updateFilter("department")}>
@@ -713,21 +724,21 @@ export default function Dashboard({ records, options, savedCount, csiCount, onIm
           </label>
         </div>
         <div className="flex justify-end gap-2 max-[900px]:justify-start max-[720px]:w-full max-[720px]:flex-wrap">
-          <a className="inline-flex items-center whitespace-nowrap rounded-[9px] border border-slate-200 bg-white px-[13px] py-2 text-xs font-semibold text-slate-700 no-underline hover:bg-sky-800 hover:text-white" href="/survey">
-            แบบประเมิน
-          </a>
-          <button className="inline-flex items-center whitespace-nowrap border border-slate-200 rounded-[9px] bg-white px-[13px] py-2 text-xs font-semibold text-slate-700 hover:bg-sky-800 hover:text-white disabled:opacity-60 cursor-pointer" type="button" onClick={() => csiFileInput.current?.click()} disabled={csiImporting}>
-            {csiImporting ? "กำลังนำเข้า..." : "นำเข้า Excel"}
-          </button>
-          <label className="flex cursor-pointer items-center gap-2 rounded-[9px] border border-slate-200 bg-white px-[11px] py-2 text-slate-500 max-[720px]:max-w-[170px]">
+          <label className="flex cursor-pointer items-center gap-2 rounded-[9px] border border-slate-200 bg-white px-[11px] py-2 text-slate-500 max-[720px]:order-first max-[720px]:w-full max-[720px]:max-w-none">
             <Icon name="calendar" size={17} />
-            <select className={`${selectClass} cursor-pointer`} value={filters.period} onChange={updateFilter("period")}>
+            <select className={`${selectClass} cursor-pointer max-[720px]:max-w-none max-[720px]:flex-1`} value={filters.period} onChange={updateFilter("period")}>
               <option value="all">ทุกเดือน</option>
               {periods.map((item) => <option value={item} key={item}>{monthLabel(item)}</option>)}
             </select>
           </label>
           <input ref={csiFileInput} type="file" accept=".xlsx,.xls" hidden onChange={handleCsiFile} />
-          <button className="whitespace-nowrap rounded-[9px] border border-slate-200 bg-white px-[11px] py-2 text-xs font-semibold text-slate-700 hover:bg-sky-800 hover:text-white cursor-pointer" onClick={() => exportResults(records)}>ส่งออก Excel</button>
+          <a className="inline-flex items-center justify-center whitespace-nowrap rounded-[9px] border border-slate-200 bg-white px-[13px] py-2 text-xs font-semibold text-slate-700 no-underline hover:bg-sky-800 hover:text-white max-[720px]:flex-1" href="/survey">
+            แบบประเมิน
+          </a>
+          <button className="inline-flex items-center justify-center whitespace-nowrap border border-slate-200 rounded-[9px] bg-white px-[13px] py-2 text-xs font-semibold text-slate-700 hover:bg-sky-800 hover:text-white disabled:opacity-60 cursor-pointer max-[720px]:flex-1" type="button" onClick={() => csiFileInput.current?.click()} disabled={csiImporting}>
+            {csiImporting ? "กำลังนำเข้า..." : "นำเข้า Excel"}
+          </button>
+          <button className="inline-flex items-center justify-center whitespace-nowrap rounded-[9px] border border-slate-200 bg-white px-[11px] py-2 text-xs font-semibold text-slate-700 hover:bg-sky-800 hover:text-white cursor-pointer max-[720px]:flex-1" onClick={() => exportResults(records)}>ส่งออก Excel</button>
         </div>
       </div>
 

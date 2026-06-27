@@ -18,7 +18,7 @@ export function Layout({ activePage, savedCount, csiCount, user, onLogout, child
           </span>
         </a>
 
-        <nav className="grid gap-[3px] overflow-y-auto [scrollbar-width:none] max-[720px]:flex max-[720px]:w-full max-[720px]:snap-x max-[720px]:gap-[5px] max-[720px]:overflow-x-auto max-[720px]:overflow-y-hidden [&::-webkit-scrollbar]:hidden">
+        <nav className="grid gap-[3px] overflow-y-auto [scrollbar-width:none] max-[720px]:flex max-[720px]:min-w-0 max-[720px]:flex-1 max-[720px]:snap-x max-[720px]:gap-[5px] max-[720px]:overflow-x-auto max-[720px]:overflow-y-hidden [&::-webkit-scrollbar]:hidden">
           <a className={navClass(activePage === "dashboard")} href="/">
             <Icon name="home" />
             <span className="max-[1100px]:hidden">
@@ -45,7 +45,7 @@ export function Layout({ activePage, savedCount, csiCount, user, onLogout, child
         </div>
 
         {user && (
-          <div className="mt-3 border-t border-white/15 pt-3 max-[720px]:mt-0 max-[720px]:ml-auto max-[720px]:flex max-[720px]:items-center max-[720px]:border-0 max-[720px]:pt-0">
+          <div className="mt-3 border-t border-white/15 pt-3 max-[720px]:mt-0 max-[720px]:ml-1.5 max-[720px]:flex max-[720px]:shrink-0 max-[720px]:items-center max-[720px]:border-0 max-[720px]:pt-0">
             <div className="mb-2 px-[5px] max-[1100px]:hidden max-[720px]:hidden">
               <b className="block text-[13px] text-white">{user.fullName || user.username}</b>
               <small className="text-[10px] uppercase tracking-wide text-white/60">{user.role}</small>
